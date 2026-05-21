@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this checklist, please cite the associated review article. Until the article is published, use the placeholder preferred citation below and update bibliographic details once available."
+title: "Minimum reporting checklist for generative materials design"
+license: CC-BY-4.0
+authors:
+  - family-names: "Klein Moberg"
+    given-names: "Henrik"
+  - family-names: "Mizoguchi"
+    given-names: "Teruyasu"
+  - family-names: "Tanaka"
+    given-names: "Isao"
+  - family-names: "Härelind"
+    given-names: "Hanna"
+  - family-names: "Hellman"
+    given-names: "Anders"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Klein Moberg"
+      given-names: "Henrik"
+    - family-names: "Mizoguchi"
+      given-names: "Teruyasu"
+    - family-names: "Tanaka"
+      given-names: "Isao"
+    - family-names: "Härelind"
+      given-names: "Hanna"
+    - family-names: "Hellman"
+      given-names: "Anders"
+  title: "Minimum reporting checklist for generative materials design"
+  journal: "TBD"
+  year: 2026
+keywords:
+  - reporting standards
+  - checklist
+  - generative models
+  - materials informatics
+  - benchmarking

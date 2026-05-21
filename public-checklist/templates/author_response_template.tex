@@ -1,0 +1,92 @@
+% Author response template (LaTeX)
+% Minimum reporting checklist for generative materials design
+%
+% Usage (standalone):
+%   pdflatex author_response_template.tex
+%
+% Usage (in a manuscript):
+%   Copy the section(s) and tables below into your SI/Appendix, or
+%   \input{templates/author_response_template.tex} and delete this preamble.
+%
+\documentclass[11pt]{article}
+
+\usepackage[margin=25mm]{geometry}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[hidelinks]{hyperref}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlength{\tabcolsep}{3pt}
+
+\begin{document}
+
+\section*{Author response to the minimum reporting checklist}
+
+\noindent\textbf{Paper title:} \emph{(fill in)}\\
+\textbf{Version (date):} \emph{(fill in)}\\
+\textbf{Manuscript ID (optional):} \emph{(fill in)}\\
+\textbf{Corresponding author:} \emph{(fill in)}\\
+\textbf{Code or data release (optional):} \emph{(URL, DOI, or repository tag/commit)}\\
+
+\vspace{2mm}
+\noindent\textbf{Instructions.} For each checklist item ID, provide a one to three sentence response and point to the exact location where the information is reported (main text section, SI section, figure, table, or repository path/commit). When space is limited, keep a one line summary in the main text and place full details in the SI.
+
+\vspace{4mm}
+\subsection*{Required items (must report in main text)}
+
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{0pt}
+
+\begin{longtable}{@{}L{0.06\textwidth} L{0.20\textwidth} L{0.50\textwidth} L{0.17\textwidth}@{}}
+\toprule
+\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\small Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{D1} & Data & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{S1} & Splits and leakage & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{M1} & Model specification & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{T1} & Training and inference & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{G1} & Generation protocol & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{E1} & Evaluation & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{B1} & Baselines and ablations & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{F1} & Feasibility (thermodynamic vs synthetic) & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{R1} & Reproducibility & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+
+\end{longtable}
+
+\subsection*{Optional items (recommended)}
+
+\begin{longtable}{@{}L{0.06\textwidth} L{0.20\textwidth} L{0.50\textwidth} L{0.17\textwidth}@{}}
+\toprule
+\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\small Continued on next page}\\
+\endfoot
+\bottomrule
+\endlastfoot
+
+\texttt{CL1} & Closed loop or active learning & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{C1} & Compute footprint & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{GOV1} & Governance and responsible use & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+\texttt{K1} & Key number summary & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
+
+\end{longtable}
+
+\end{document}
