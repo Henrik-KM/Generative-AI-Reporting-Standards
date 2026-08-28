@@ -1,49 +1,39 @@
-# Minimum reporting checklist (generative materials design)
+# Reporting checklist for generative materials design
 
-We group items into **Required** (must report in the main text) and **Optional** (recommended; SI is acceptable).
-Each item has a stable identifier (ID) intended for versioned citations and reviewer cross referencing.
+The checklist contains nine required items, three context-dependent items, and one optional key-number summary. The stable identifiers are intended for versioned citations and reviewer cross-referencing. Required items should be summarised in the main text, while complete protocol details can be placed in the Supplementary Information or a versioned repository when space is limited.
 
-## Required (must report in main text)
+## Required reporting items
 
-- [ ] **D1 Data**: Name and version of each dataset and the license. Include size (`n`), label types, preprocessing or filters, deduplication, and leakage checks (overlap between splits).
-  - Include a minimal shortcut learning audit that probes for trivial cues.
-  - The audit should include at least one intentionally underspecified baseline (for example metadata only or formula only), and at least one perturbation check (for example shuffled labels, or removed structure information) to test whether apparent performance persists without the intended signal.
-  - Report leakage outcomes (for example cross split collision rate) and summarize the audit outcome in one line.
-  - Publish split manifests (exact item IDs and, if relevant, file hashes) with checksums or a repository tag or commit.
+- [ ] **D1 Data**: Name and version of each dataset and the licence. Include size (`n`), label types, preprocessing, filters, and split manifests. Predeclare a modality-appropriate duplicate rule and its tolerances, such as a structure matcher, composition plus space-group bucket, Tanimoto threshold, or sample, batch, or acquisition identifier. Report the cross-split collision rate. For claims of held-out generalisation, aim for zero collisions under the predeclared matching rule; if collisions remain, justify them, repeat the analysis after excluding them, and state whether the conclusion changes. Include one shortcut baseline, such as metadata only or formula only, and one perturbation check, such as shuffled labels or removed structure information. Publish exact item IDs and, where relevant, file hashes with checksums or a repository tag or commit.
 
-- [ ] **S1 Splits**: Describe the split strategy (time based or group based, for example composition or scaffold). Provide split sizes and rationale. Note any data used for model selection.
+- [ ] **S1 Splits**: State the split strategy, sizes, rationale, and grouping unit, and identify every split or external dataset used for model selection.
 
-- [ ] **M1 Inputs and model**: State the input representations, the architecture family, final hyperparameters, and random seeds.
+- [ ] **M1 Inputs/Model**: State the input representations, architecture family, final hyperparameters, and random seeds.
 
-- [ ] **T1 Training and inference**: Report steps or epochs, optimizer and schedule, hardware type and count, wall clock time (mean ± SD), batch size, precision, and inference throughput (samples per second or seconds per sample) with the same hardware specification.
+- [ ] **T1 Training**: Report steps or epochs, optimiser and schedule, hardware type and count, wall-clock time, batch size, numerical precision, and inference throughput on stated hardware.
 
-- [ ] **G1 Generation protocol**: Describe conditioning targets, the sampler or solver, total candidates (`N_gen`), diversity controls, and any repair, rejection, or post processing rules.
-  - For comparisons, state whether metrics are computed on as generated samples or after post processing (for example chemistry canonicalization, geometry relaxation, redocking, or DFT relaxation).
-  - When filters are used, report both raw and post filter pass rates.
+- [ ] **G1 Generation**: Describe conditioning targets, the sampler or solver, total candidates (`N_gen`), diversity controls, and any repair, rejection, or post-processing rules. For comparisons, report whether metrics are computed on as-generated samples or after post-processing, such as chemistry canonicalisation, geometry relaxation, redocking, or DFT relaxation. Report both raw and post-filter pass rates when filters are used.
 
-- [ ] **E1 Metrics**: Define validity, novelty, diversity, and relaxability precisely, including whether each is computed as generated or post processing. Report confidence intervals across at least three independent seeds.
+- [ ] **E1 Metrics**: Define validity, novelty, diversity, relaxability, and task success, including the reference set, matching rule, evaluator, and evaluation stage. Report uncertainty across independent runs where stochastic variation affects the claim.
 
-- [ ] **B1 Baselines and ablations**: Include at least one trivial baseline (random or retrieval), one transparent non generative baseline (for example virtual screening), and where relevant a simple non deep learning generative baseline (for example genetic algorithm).
-  - Include at least one ablation that removes the key component.
-  - Where appropriate, report results under domain relevant benchmark protocols; suites such as MOSES and GuacaMol can be useful reference implementations, but they should not be treated as gold standard benchmarks, and protocol details (splits, filters, post processing) must be stated.
+- [ ] **B1 Baselines and ablations**: Include a trivial baseline, such as random generation or retrieval; a transparent non-generative baseline, such as virtual screening; and, where relevant, a simple non-deep-learning generator, such as a genetic algorithm. For inorganic crystals, compare against retrieval from known prototypes, data-mined ion substitution, and charge-balanced, oxidation-state-constrained random or decorated prototype enumeration where the task permits. Apply the same search space, fast filters, evaluator protocol, and evaluator budget to every method. Include an ablation that removes the key component, and state all benchmark protocol details.
 
-- [ ] **F1 Feasibility (thermodynamic vs synthetic)**: Separate thermodynamic and synthetic feasibility.
-  - Thermodynamic feasibility: report protocol defined stability proxies under a pinned relaxation protocol; state whether stability refers to 0 K `E_hull`, finite temperature free energy stability, or metastability within a stated window.
-  - Synthetic feasibility: report synthesizability or manufacturability proxies that depend on routes, conditions, and kinetics; specify the settings of any retrosynthesis analysis (tool and version, template set, depth or time limits, and success criterion).
-  - For inorganics, apply charge neutrality, oxidation state consistency, and element constraints as fast screens and report post relaxation stability metrics separately.
-  - For porous or metamaterial tasks, enforce minimum feature size and connectivity.
-  - State each proxy and report `N_pass/N_gen` at each stage, separating pre and post relaxation metrics where applicable.
+- [ ] **F1 Feasibility**: Separate chemical validity, thermodynamic stability, synthesizability, and manufacturability. For inorganics, report fast charge, oxidation-state, and element screens separately from post-relaxation stability. No universal inorganic synthesizability proxy exists, and low 0 K `E_hull` alone is insufficient. Pin the relaxation protocol, reference database and version, energy corrections, competing phases, thresholds, and any stated metastability window. If the claim concerns experimental conditions, report temperature, pressure, chemical potentials, or finite-temperature free energies as applicable. Report route- or kinetics-based evidence separately. For molecules, state the retrosynthesis tool and version, template set, depth or time limits, and success criterion. For structured materials, report minimum feature size, connectivity, and tolerance constraints. At every stage, report `N_pass/N_gen` and whether the metric is before or after relaxation.
 
-- [ ] **R1 Reproducibility**: Provide public code and model weights when release is permissible; otherwise, state access restrictions, provide executable evaluation scripts where possible, and document the exact artifacts needed to reproduce reported metrics. Include an environment lockfile (pins exact package versions), pinned evaluation artifacts (evaluation scripts and split manifests with repository URL and tag or commit, plus short checksums for split list files), a single command to rebuild figures or tables, and notes on determinism (seeds and cuDNN).
+- [ ] **R1 Reproducibility**: Provide public code and model weights when release is permissible. Otherwise, state access restrictions, provide executable evaluation scripts where possible, and document the exact artefacts needed to reproduce the reported metrics. Include an environment lockfile, pinned evaluation scripts and split manifests with a repository URL and tag or commit, short checksums for split-list files, a single command to rebuild figures and tables, and notes on determinism, including seeds and cuDNN settings.
 
-## Optional (recommended; SI acceptable)
+## Context-dependent reporting items
 
-- [ ] **CL1 Closed loop and uncertainty quantification (if used)**: State the acquisition policy (for example expected improvement or Thompson sampling), batch size, number of rounds, stopping rule, the uncertainty quantification method (ensemble, Monte Carlo dropout, or evidential), and total evaluations.
+These items should be included when they affect interpretation. Supplementary Information or a versioned repository is acceptable when space is limited. A machine-readable response should retain each identifier and use `not_applicable` only when the corresponding workflow component or material concern is absent, with a brief rationale.
 
-- [ ] **C1 Compute footprint**: Report training and inference throughput (candidates per GPU hour), accelerator types and counts, wall clock, and when feasible energy or carbon estimates.
-  - As a default: energy ≈ wall clock × average power draw; carbon ≈ energy × grid emissions factor (optionally scaled by an assumed PUE). Report uncertainty bands.
+- [ ] **CL1 Closed-loop/UQ**: If a closed loop is used, state the acquisition policy, batch size, number of rounds, stopping rule, uncertainty-quantification method, and total evaluations.
 
-- [ ] **GOV1 Governance and ethics**: State dataset licenses, any dual use screening, and a brief OECD aligned safeguards statement.
-  - If external or prospective validation is not included, disclose why and outline a minimal proxy plan (for example preregistered evaluation protocol, external blind test in a later phase, or cross lab computational validation with frozen code and splits).
+- [ ] **C1 Compute footprint**: Report training and inference throughput in candidates per GPU-hour, accelerator types and counts, and wall-clock time. When feasible, report energy and carbon estimates. As a default, estimate energy as wall-clock time multiplied by average power draw and carbon as energy multiplied by the grid-emissions factor, optionally scaled by an assumed power usage effectiveness. Report uncertainty bands.
 
-- [ ] **K1 Key number summary (optional)**: `Ngen=...; Validity=...% (CI; seeds ≥3); Novelty=...%; Relaxability=...% (protocol=...); Feasibility pass rate=pass/gen=... (pre or post); Closed loop=R rounds × N_eval evaluations; Training=(T) h on H GPUs; Tag=repo@vX.Y`.
+- [ ] **GOV1 Governance and ethics**: Explain whether the model, candidate class, access pathway, or intended use creates a material dual-use, safety, misuse, or access concern. Where it does, describe the relevant controls, such as hazard filtering, controlled access, or monitoring. Where it does not, state the rationale briefly. Prospective validation is required here only when a governance or safety claim depends on it.
+
+## Optional key-number summary
+
+- [ ] **K1 Key-number summary**: `N_gen=...; stagewise pass rates=...; validated outcomes=...; evaluator budget=...; closed loop=R rounds × N_eval evaluations (where used); training cost=...; inference cost=...; tag=repo@vX.Y`.
+
+Any deviation from the checklist should be stated and briefly justified. The checklist records what was done and where it was reported; it does not by itself establish that the selected methods, thresholds, or scientific claims are appropriate.

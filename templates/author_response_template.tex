@@ -1,92 +1,87 @@
-% Author response template (LaTeX)
-% Minimum reporting checklist for generative materials design
-%
-% Usage (standalone):
-%   pdflatex author_response_template.tex
-%
-% Usage (in a manuscript):
-%   Copy the section(s) and tables below into your SI/Appendix, or
-%   \input{templates/author_response_template.tex} and delete this preamble.
-%
-\documentclass[11pt]{article}
+% Author response template for the reporting checklist
+% Standalone usage: pdflatex author_response_template.tex
+\documentclass[10pt]{article}
 
-\usepackage[margin=25mm]{geometry}
+\usepackage[margin=20mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{ragged2e}
 \usepackage[hidelinks]{hyperref}
 
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{N}[1]{>{\RaggedRight\hyphenpenalty=10000\exhyphenpenalty=10000\arraybackslash}p{#1}}
 \setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.12}
+
+\newcommand{\ResponseTableHeader}{%
+\toprule
+\textbf{ID} & \textbf{Item} & \textbf{State} & \textbf{Response} & \textbf{Source location / artefact}\\
+\midrule}
 
 \begin{document}
 
-\section*{Author response to the minimum reporting checklist}
+\section*{Author response to the reporting checklist}
 
 \noindent\textbf{Paper title:} \emph{(fill in)}\\
-\textbf{Version (date):} \emph{(fill in)}\\
-\textbf{Manuscript ID (optional):} \emph{(fill in)}\\
+\textbf{Version and date:} \emph{(fill in)}\\
 \textbf{Corresponding author:} \emph{(fill in)}\\
-\textbf{Code or data release (optional):} \emph{(URL, DOI, or repository tag/commit)}\\
+\textbf{Code or data release:} \emph{(URL, DOI, or repository tag/commit)}
 
-\vspace{2mm}
-\noindent\textbf{Instructions.} For each checklist item ID, provide a one to three sentence response and point to the exact location where the information is reported (main text section, SI section, figure, table, or repository path/commit). When space is limited, keep a one line summary in the main text and place full details in the SI.
+\medskip
+\noindent\textbf{Instructions.} For each item, select \texttt{reported}, \texttt{partially\_reported}, \texttt{not\_reported}, or \texttt{not\_applicable}; provide a one--three sentence response; and identify the exact source location. Use \texttt{not\_applicable} only when the corresponding workflow component or material concern is absent, and state why. The state records reporting completeness rather than methodological quality.
 
-\vspace{4mm}
-\subsection*{Required items (must report in main text)}
+\setlength{\LTpre}{4pt}
+\setlength{\LTpost}{8pt}
 
-\setlength{\LTpre}{0pt}
-\setlength{\LTpost}{0pt}
+\subsection*{Required reporting items}
 
-\begin{longtable}{@{}L{0.06\textwidth} L{0.20\textwidth} L{0.50\textwidth} L{0.17\textwidth}@{}}
-\toprule
-\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
-\midrule
+\begin{longtable}{@{}L{0.05\textwidth} N{0.16\textwidth} L{0.14\textwidth} L{0.37\textwidth} L{0.20\textwidth}@{}}
+\ResponseTableHeader
 \endfirsthead
-\toprule
-\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
-\midrule
+\ResponseTableHeader
 \endhead
-\midrule
-\multicolumn{4}{r}{\small Continued on next page}\\
-\endfoot
 \bottomrule
-\endlastfoot
-
-\texttt{D1} & Data & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{S1} & Splits and leakage & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{M1} & Model specification & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{T1} & Training and inference & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{G1} & Generation protocol & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{E1} & Evaluation & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{B1} & Baselines and ablations & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{F1} & Feasibility (thermodynamic vs synthetic) & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{R1} & Reproducibility & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-
+\endfoot
+\texttt{D1} & Data & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{S1} & Splits & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{M1} & Inputs/Model & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{T1} & Training & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{G1} & Generation & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{E1} & Metrics & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{B1} & Baselines and ablations & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{F1} & Feasibility & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{R1} & Reproducibility & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
 \end{longtable}
 
-\subsection*{Optional items (recommended)}
+\subsection*{Context-dependent reporting items}
 
-\begin{longtable}{@{}L{0.06\textwidth} L{0.20\textwidth} L{0.50\textwidth} L{0.17\textwidth}@{}}
-\toprule
-\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
-\midrule
+\begin{longtable}{@{}L{0.05\textwidth} N{0.16\textwidth} L{0.14\textwidth} L{0.37\textwidth} L{0.20\textwidth}@{}}
+\ResponseTableHeader
 \endfirsthead
-\toprule
-\textbf{ID} & \textbf{Checklist item} & \textbf{Response (one to three sentences)} & \textbf{Where reported}\\
-\midrule
+\ResponseTableHeader
 \endhead
-\midrule
-\multicolumn{4}{r}{\small Continued on next page}\\
-\endfoot
 \bottomrule
-\endlastfoot
-
-\texttt{CL1} & Closed loop or active learning & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{C1} & Compute footprint & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{GOV1} & Governance and responsible use & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-\texttt{K1} & Key number summary & \emph{(fill in; one to three sentences)} & \emph{(e.g., Main text Sec.~X; SI Sec.~Sx)}\\[1mm]
-
+\endfoot
+\texttt{CL1} & Closed-loop/UQ & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{C1} & Compute footprint & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\texttt{GOV1} & Governance and ethics & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
 \end{longtable}
+
+\subsection*{Optional key-number summary}
+
+\begin{longtable}{@{}L{0.05\textwidth} N{0.16\textwidth} L{0.14\textwidth} L{0.37\textwidth} L{0.20\textwidth}@{}}
+\ResponseTableHeader
+\endfirsthead
+\ResponseTableHeader
+\endhead
+\bottomrule
+\endfoot
+\texttt{K1} & Key-number summary & \emph{(state)} & \emph{(response)} & \emph{(exact location)}\\
+\end{longtable}
+
+\noindent\footnotesize\textbf{Suggested K1 fields.} Total candidates; stagewise pass rates; validated outcomes; evaluator budget; closed-loop rounds and evaluations, where used; training and inference cost; and the versioned code or record identifier.
 
 \end{document}

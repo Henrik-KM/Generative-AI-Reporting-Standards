@@ -1,23 +1,41 @@
-# Author response template (minimum reporting checklist)
+# Author response to the reporting checklist
 
-Instructions: fill one row per checklist item ID. Keep responses short; link to SI for full protocol detail.
+**Paper title:** _(fill in)_
 
-| Item ID | Response (1–3 sentences) | Where in manuscript/SI | Public artifact (URL + tag/commit + checksum if relevant) |
-|---|---|---|---|
-| D1 |  |  |  |
-| S1 |  |  |  |
-| M1 |  |  |  |
-| T1 |  |  |  |
-| G1 |  |  |  |
-| E1 |  |  |  |
-| B1 |  |  |  |
-| F1 |  |  |  |
-| R1 |  |  |  |
-| CL1 (optional) |  |  |  |
-| C1 (optional) |  |  |  |
-| GOV1 (optional) |  |  |  |
-| K1 (optional) |  |  |  |
+**Version and date:** _(fill in)_
 
-## One line summary (optional)
+**Corresponding author:** _(fill in)_
 
-`Ngen=...; Validity=...% (CI; seeds ≥3); Novelty=...%; Relaxability=...% (protocol=...); Feasibility pass rate=pass/gen=... (pre or post); Closed loop=R rounds × N_eval evaluations; Training=(T) h on H GPUs; Tag=repo@vX.Y`
+**Code or data release:** _(URL, DOI, or repository tag/commit)_
+
+For each item, select `reported`, `partially_reported`, `not_reported`, or `not_applicable`, provide a one- to three-sentence response, and point to the exact location in the manuscript, Supplementary Information, or versioned repository. Use `not_applicable` only when the corresponding workflow component or material concern is absent, and state why. The disclosure state records completeness rather than methodological quality.
+
+## Required reporting items
+
+| ID | Item | Disclosure state | Response | Exact source location and public artefact |
+|---|---|---|---|---|
+| D1 | Data |  |  |  |
+| S1 | Splits |  |  |  |
+| M1 | Inputs/Model |  |  |  |
+| T1 | Training |  |  |  |
+| G1 | Generation |  |  |  |
+| E1 | Metrics |  |  |  |
+| B1 | Baselines and ablations |  |  |  |
+| F1 | Feasibility |  |  |  |
+| R1 | Reproducibility |  |  |  |
+
+## Context-dependent reporting items
+
+| ID | Item | Disclosure state | Response | Exact source location and public artefact |
+|---|---|---|---|---|
+| CL1 | Closed-loop/UQ |  |  |  |
+| C1 | Compute footprint |  |  |  |
+| GOV1 | Governance and ethics |  |  |  |
+
+## Optional key-number summary
+
+| ID | Item | Disclosure state | Response | Exact source location and public artefact |
+|---|---|---|---|---|
+| K1 | Key-number summary |  |  |  |
+
+`N_gen=...; stagewise pass rates=...; validated outcomes=...; evaluator budget=...; closed loop=R rounds × N_eval evaluations (where used); training cost=...; inference cost=...; tag=repo@vX.Y`

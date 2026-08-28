@@ -1,32 +1,38 @@
-# Minimum Reporting Checklist for Generative Materials Design
+# Reporting Checklist for Generative Materials Design
 
-This repository provides a lightweight reporting checklist for generative materials design studies.
-We intend it as a shared contract between authors, reviewers, benchmark curators, and downstream users: it does not prescribe a single best pipeline, but it makes claims auditable and protocols comparable.
+This repository provides a lightweight reporting checklist for generative materials design studies. It treats the complete workflow, from data and candidate generation to filtering, evaluator use, and validation, as the unit that should be reported. The checklist does not prescribe one preferred discovery pipeline or treat reporting completeness as a substitute for scientific assessment.
 
-## What this contains
+## Repository contents
 
-- The checklist text with stable item identifiers (IDs): see [checklist.md](checklist.md).
-- An author response template to fill during writing or review: see [templates/author_response_template.md](templates/author_response_template.md).
-- A LaTeX author response template (for SI/Appendix): see [templates/author_response_template.tex](templates/author_response_template.tex).
-- A short changelog for checklist revisions: see [CHANGELOG.md](CHANGELOG.md).
+- [checklist.md](checklist.md) contains the canonical checklist wording and stable identifiers.
+- [templates/author_response_template.md](templates/author_response_template.md) and [templates/author_response_template.tex](templates/author_response_template.tex) provide short author-response forms.
+- [schema/reporting-checklist.schema.json](schema/reporting-checklist.schema.json) defines the machine-readable JSON format.
+- [examples](examples) contains three retrospective worked examples spanning molecular design, inorganic crystal generation, and active-learning crystal structure search.
+- [tools/validate.py](tools/validate.py) checks required fields, item coverage, allowed disclosure states, and basic field types using only the Python standard library.
 
-## How to use (authors)
+## Use in a manuscript
 
-1. Copy [templates/author_response_template.md](templates/author_response_template.md) into your project.
-2. For each checklist item ID, write a one to three sentence answer and point to the exact location in your manuscript or SI.
-3. When space is limited, put the one line summary in the main text and place the full responses in the SI.
-4. For any deviations, state them explicitly and justify them.
+1. Summarise the nine required items in the main text and place full protocol details in the Supplementary Information or a versioned repository when needed.
+2. Retain the stable item identifiers and give an exact source location for each response.
+3. Include the three context-dependent items and use `not_applicable` only when the corresponding workflow component or material concern is absent, with a brief rationale.
+4. State and justify any deviation from the checklist.
 
-## How to cite
+The machine-readable format uses four disclosure states: `reported`, `partially_reported`, `not_reported`, and `not_applicable`. These states describe reporting completeness. In particular, `not_reported` does not imply that the underlying method was inadequate.
 
-- Please cite the associated review article.
-- Until the article is published, use the placeholder citation in [CITATION.cff](CITATION.cff) and update it once bibliographic details (journal, year, volume, pages, DOI) are available.
+## Validate a JSON response
 
-## License
+Python 3.9 or newer is sufficient; no packages need to be installed.
 
-This checklist text is licensed under CC BY 4.0. See [LICENSE](LICENSE).
+```console
+python tools/validate.py examples
+```
 
-## Relationship to the manuscript repo
+The same command accepts one JSON file or a directory containing JSON files. The validator intentionally checks structure and completeness only. It does not judge whether a scientific method, threshold, baseline, or conclusion is appropriate.
 
-This folder is designed to be moved into its own public GitHub repository without modification.
-When extracting it, place the contents of `public-checklist/` at the root of the new repository.
+## Worked examples
+
+The examples apply the checklist retrospectively to three published studies. Each item contains a concise disclosure judgement and the section, figure, table, or availability statement from which it was derived. They demonstrate how information can be assembled when it is distributed across an article, Supplementary Information, and public artefacts; they are not rankings of the studies.
+
+## Citation and licence
+
+Please cite the associated review article using [CITATION.cff](CITATION.cff). Until publication, the journal details remain provisional. The checklist text is licensed under CC BY 4.0; see [LICENSE](LICENSE).

@@ -1,6 +1,10 @@
 cff-version: 1.2.0
-message: "If you use this checklist, please cite the associated review article. Until the article is published, use the placeholder preferred citation below and update bibliographic details once available."
-title: "Minimum reporting checklist for generative materials design"
+message: "If you use this checklist, please cite the associated review article. Until the article is published, use the provisional citation below and update the bibliographic details once available."
+title: "Reporting checklist for generative materials design"
+version: "0.2.0"
+date-released: 2026-08-28
+repository-code: "https://github.com/Henrik-KM/Generative-AI-Reporting-Standards"
+doi: "10.5281/zenodo.20326024"
 license: CC-BY-4.0
 authors:
   - family-names: "Klein Moberg"
@@ -26,8 +30,8 @@ preferred-citation:
       given-names: "Hanna"
     - family-names: "Hellman"
       given-names: "Anders"
-  title: "Minimum reporting checklist for generative materials design"
-  journal: "TBD"
+  title: "Decision-ready generative AI for materials design"
+  journal: "Nature Machine Intelligence"
   year: 2026
 keywords:
   - reporting standards
