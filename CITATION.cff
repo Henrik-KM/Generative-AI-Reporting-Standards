@@ -1,8 +1,8 @@
 cff-version: 1.2.0
-message: "If you use this checklist, please cite the associated review article. Until the article is published, use the provisional citation below and update the bibliographic details once available."
-title: "Reporting checklist for generative materials design"
-version: "0.2.0"
-date-released: 2026-08-28
+message: "If you use this protocol, please cite this record. The associated article is in preparation."
+title: "A reporting protocol for decision-ready generative materials design"
+version: "1.0.0"
+date-released: 2026-10-08
 repository-code: "https://github.com/Henrik-KM/Generative-AI-Reporting-Standards"
 doi: "10.5281/zenodo.20326024"
 license: CC-BY-4.0
@@ -17,25 +17,9 @@ authors:
     given-names: "Hanna"
   - family-names: "Hellman"
     given-names: "Anders"
-preferred-citation:
-  type: article
-  authors:
-    - family-names: "Klein Moberg"
-      given-names: "Henrik"
-    - family-names: "Mizoguchi"
-      given-names: "Teruyasu"
-    - family-names: "Tanaka"
-      given-names: "Isao"
-    - family-names: "Härelind"
-      given-names: "Hanna"
-    - family-names: "Hellman"
-      given-names: "Anders"
-  title: "Decision-ready generative AI for materials design"
-  journal: "Nature Machine Intelligence"
-  year: 2026
 keywords:
   - reporting standards
-  - checklist
+  - reporting protocol
   - generative models
   - materials informatics
   - benchmarking

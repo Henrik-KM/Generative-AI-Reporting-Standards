@@ -1,39 +1,78 @@
-# Reporting checklist for generative materials design
+# A reporting protocol for generative materials design (version 1.0.0)
 
-The checklist contains nine required items, three context-dependent items, and one optional key-number summary. The stable identifiers are intended for versioned citations and reviewer cross-referencing. Required items should be summarised in the main text, while complete protocol details can be placed in the Supplementary Information or a versioned repository when space is limited.
+Generative models can now propose candidate materials far faster than they can be validated, and the scientifically relevant outcome of a study is therefore the small subset of candidates that survives filtering and evaluation, rather than the generated set itself. This protocol treats the complete workflow, from data and candidate generation through filters and evaluators to validated outcomes, as the unit that should be reported. It does not prescribe a preferred pipeline, and a complete record does not by itself establish that the chosen methods, thresholds, or conclusions are appropriate.
 
-## Required reporting items
+## How to use the protocol
 
-- [ ] **D1 Data**: Name and version of each dataset and the licence. Include size (`n`), label types, preprocessing, filters, and split manifests. Predeclare a modality-appropriate duplicate rule and its tolerances, such as a structure matcher, composition plus space-group bucket, Tanimoto threshold, or sample, batch, or acquisition identifier. Report the cross-split collision rate. For claims of held-out generalisation, aim for zero collisions under the predeclared matching rule; if collisions remain, justify them, repeat the analysis after excluding them, and state whether the conclusion changes. Include one shortcut baseline, such as metadata only or formula only, and one perturbation check, such as shuffled labels or removed structure information. Publish exact item IDs and, where relevant, file hashes with checksums or a repository tag or commit.
+Authors complete one entry per item at submission, in the Supplementary Information or in a versioned repository. Each entry states the choice or value that was actually used, in one or two sentences, followed by the location of the full details; a pointer alone is not an entry. Every item is answered in one of three ways:
 
-- [ ] **S1 Splits**: State the split strategy, sizes, rationale, and grouping unit, and identify every split or external dataset used for model selection.
+- with the **value** or procedure that was used;
+- as **not applicable**, with the reason the component is absent from the workflow;
+- as **not performed**, with the consequence for the claim.
 
-- [ ] **M1 Inputs/Model**: State the input representations, architecture family, final hyperparameters, and random seeds.
+When a record is completed from a publication rather than by its authors, a fourth answer, **not stated**, marks information that only the authors could supply. Items marked *(if applicable)* are answered as not applicable when the component is absent.
 
-- [ ] **T1 Training**: Report steps or epochs, optimiser and schedule, hardware type and count, wall-clock time, batch size, numerical precision, and inference throughput on stated hardware.
+The protocol applies to any workflow in which a proposal engine, whether a generative model, an enumeration scheme, or a structure search, feeds a sequence of filters and evaluators. Model and training items refer to every model trained within the workflow, including surrogates and machine-learning interatomic potentials.
 
-- [ ] **G1 Generation**: Describe conditioning targets, the sampler or solver, total candidates (`N_gen`), diversity controls, and any repair, rejection, or post-processing rules. For comparisons, report whether metrics are computed on as-generated samples or after post-processing, such as chemistry canonicalisation, geometry relaxation, redocking, or DFT relaxation. Report both raw and post-filter pass rates when filters are used.
+## The eight steps
 
-- [ ] **E1 Metrics**: Define validity, novelty, diversity, relaxability, and task success, including the reference set, matching rule, evaluator, and evaluation stage. Report uncertainty across independent runs where stochastic variation affects the claim.
+### 1. State the claim
 
-- [ ] **B1 Baselines and ablations**: Include a trivial baseline, such as random generation or retrieval; a transparent non-generative baseline, such as virtual screening; and, where relevant, a simple non-deep-learning generator, such as a genetic algorithm. For inorganic crystals, compare against retrieval from known prototypes, data-mined ion substitution, and charge-balanced, oxidation-state-constrained random or decorated prototype enumeration where the task permits. Apply the same search space, fast filters, evaluator protocol, and evaluator budget to every method. Include an ablation that removes the key component, and state all benchmark protocol details.
+- **Claim and evidence level.** The outcome claimed; the evidence level at which it was established (surrogate, machine-learning potential, first-principles calculation, simulation, or experiment); and any comparison with other methods that is claimed.
 
-- [ ] **F1 Feasibility**: Separate chemical validity, thermodynamic stability, synthesizability, and manufacturability. For inorganics, report fast charge, oxidation-state, and element screens separately from post-relaxation stability. No universal inorganic synthesizability proxy exists, and low 0 K `E_hull` alone is insufficient. Pin the relaxation protocol, reference database and version, energy corrections, competing phases, thresholds, and any stated metastability window. If the claim concerns experimental conditions, report temperature, pressure, chemical potentials, or finite-temperature free energies as applicable. Report route- or kinetics-based evidence separately. For molecules, state the retrosynthesis tool and version, template set, depth or time limits, and success criterion. For structured materials, report minimum feature size, connectivity, and tolerance constraints. At every stage, report `N_pass/N_gen` and whether the metric is before or after relaxation.
+### 2. Map the workflow
 
-- [ ] **R1 Reproducibility**: Provide public code and model weights when release is permissible. Otherwise, state access restrictions, provide executable evaluation scripts where possible, and document the exact artefacts needed to reproduce the reported metrics. Include an environment lockfile, pinned evaluation scripts and split manifests with a repository URL and tag or commit, short checksums for split-list files, a single command to rebuild figures and tables, and notes on determinism, including seeds and cuDNN settings.
+- **Stage ledger.** For every stage, the rule or evaluator, the numbers of candidates entering and leaving, the number of evaluator calls, and the cost per call; for iterative workflows, per cycle and in total.
 
-## Context-dependent reporting items
+### 3. Describe the data
 
-These items should be included when they affect interpretation. Supplementary Information or a versioned repository is acceptable when space is limited. A machine-readable response should retain each identifier and use `not_applicable` only when the corresponding workflow component or material concern is absent, with a brief rationale.
+- **Data.** Each dataset with version, licence, size, label types, preprocessing, filters, and deduplication; the rule and tolerances that define when two candidates are identical (for example, structure-matcher settings, composition and space group, or a Tanimoto threshold); the resulting cross-split collision rate; and split manifests or stable identifiers.
+- **Splits.** Strategy, grouping unit, sizes, and rationale; every set used for model selection; and, for iterative workflows, which data were acquired during the campaign and whether a held-out test set remained untouched.
 
-- [ ] **CL1 Closed-loop/UQ**: If a closed loop is used, state the acquisition policy, batch size, number of rounds, stopping rule, uncertainty-quantification method, and total evaluations.
+### 4. Describe how candidates were produced
 
-- [ ] **C1 Compute footprint**: Report training and inference throughput in candidates per GPU-hour, accelerator types and counts, and wall-clock time. When feasible, report energy and carbon estimates. As a default, estimate energy as wall-clock time multiplied by average power draw and carbon as energy multiplied by the grid-emissions factor, optionally scaled by an assumed power usage effectiveness. Report uncertainty bands.
+- **Model.** Input representation, architecture, final hyperparameters, and random seeds for the generator, surrogates, and any machine-learning potential.
+- **Training.** Optimiser and schedule, steps or epochs, batch size, numerical precision, hardware, and wall-clock time.
+- **Generation.** Conditioning targets, sampler, number of proposals, diversity controls, all repair, rejection, and post-processing rules with pass rates before and after them, and inference throughput on stated hardware.
 
-- [ ] **GOV1 Governance and ethics**: Explain whether the model, candidate class, access pathway, or intended use creates a material dual-use, safety, misuse, or access concern. Where it does, describe the relevant controls, such as hazard filtering, controlled access, or monitoring. Where it does not, state the rationale briefly. Prospective validation is required here only when a governance or safety claim depends on it.
+### 5. Define success and its evidence
 
-## Optional key-number summary
+- **Evaluation.** Definitions of validity, uniqueness, novelty, diversity, and task success, each with its reference set, matching rule, evaluator, and stage (before or after relaxation); the surrogate and the high-fidelity evaluator side by side; how conclusions change with the matching tolerance and thresholds; and the uncertainty across independent runs.
+- **Feasibility.** Each level of evidence separately, namely chemical validity screens; thermodynamic stability with relaxation protocol, reference database and version, energy corrections, competing phases, and threshold; dynamical stability, with the phonon or finite-temperature protocol and the treatment of imaginary modes, whenever stability or metastability is claimed; synthesizability evidence, such as retrosynthesis settings for molecules or condition-dependent free energies, precursors, kinetics, or experiments for inorganic materials; and fabrication constraints for structured materials. A low 0 K energy above the convex hull alone does not establish synthesizability.
 
-- [ ] **K1 Key-number summary**: `N_gen=...; stagewise pass rates=...; validated outcomes=...; evaluator budget=...; closed loop=R rounds × N_eval evaluations (where used); training cost=...; inference cost=...; tag=repo@vX.Y`.
+### 6. Establish the comparison
 
-Any deviation from the checklist should be stated and briefly justified. The checklist records what was done and where it was reported; it does not by itself establish that the selected methods, thresholds, or scientific claims are appropriate.
+- **Baselines and ablations.** The strongest simpler method that addresses the same task, and a trivial baseline such as random selection or retrieval of the nearest training examples, all under the same search space, filters, evaluator protocol, and evaluator budget; at least one ablation of the claimed key component. Typical simpler methods are library screening, genetic algorithms, and the MOSES or GuacaMol protocols for molecules; prototype retrieval, data-mined ion substitution, and charge-balanced prototype enumeration for inorganic crystals; and screening of hypothetical databases or topology optimisation for porous and structured materials.
+
+### 7. Complete the context
+
+- **Closed loop and uncertainty** *(if applicable)*. Acquisition policy, uncertainty quantification (UQ) method, batch size, number of rounds, stopping rule, and total evaluations.
+- **Reproducibility.** Code, weights, evaluation scripts, data, and environment, or the access restrictions; pinned versions; and one command that rebuilds the reported figures and tables.
+- **Compute** *(if applicable)*. Training and evaluator compute where it affects comparison, with energy estimates where feasible.
+- **Governance** *(if applicable)*. Whether the candidate class, capability, access pathway, or intended use creates a dual-use or safety concern, and the controls used if so.
+
+### 8. Summarise the key numbers in the main text
+
+- **Key numbers.** One or two sentences that condense the stage ledger: proposals generated, candidates and evaluator calls at each level of evidence, and the validated outcomes together with the level at which they were validated.
+
+## Machine-readable identifiers
+
+| Step | Item | Identifier | Category |
+|---|---|---|---|
+| 1 | Claim and evidence level | `claim` | required |
+| 2 | Stage ledger | `stage_ledger` | required |
+| 3 | Data | `data` | required |
+| 3 | Splits | `splits` | required |
+| 4 | Model | `model` | required |
+| 4 | Training | `training` | required |
+| 4 | Generation | `generation` | required |
+| 5 | Evaluation | `evaluation` | required |
+| 5 | Feasibility | `feasibility` | required |
+| 6 | Baselines and ablations | `baselines` | required |
+| 7 | Closed loop and uncertainty | `closed_loop` | if applicable |
+| 7 | Reproducibility | `reproducibility` | required |
+| 7 | Compute | `compute` | if applicable |
+| 7 | Governance | `governance` | if applicable |
+| 8 | Key numbers | `key_numbers` | required |
+
+The changes from version 0.2.0, and the reason for each, are listed in [CHANGELOG.md](CHANGELOG.md).

@@ -1,0 +1,153 @@
+{
+  "checklist_version": "0.2.0",
+  "record_type": "retrospective_audit",
+  "study": {
+    "title": "High-throughput property-driven generative design of functional organic molecules",
+    "citation": "Westermayr J, Gilkes J, Barrett R, Maurer RJ. Nature Computational Science 3, 139-148 (2023).",
+    "doi": "10.1038/s43588-022-00391-1",
+    "workflow_type": "Iterative property-guided molecular generation and surrogate screening",
+    "assessment_scope": "Published article, Supplementary Information, data and code availability statements, and linked data and code records; the analysis was not rerun.",
+    "audit_date": "2026-07-20"
+  },
+  "items": [
+    {
+      "id": "D1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "OE62 and the molecular filters are identified, and licence information can be recovered from linked OE62 and generated-data records. Complete split manifests, a predeclared molecular matching rule with cross-split collision rate, and shortcut and perturbation checks are not provided.",
+      "source_locations": [
+        "Main text, Results, Workflow",
+        "Methods, G-SchNet model for molecule generation",
+        "Data availability",
+        "Linked OE62 and Figshare records"
+      ]
+    },
+    {
+      "id": "S1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Two SchNet+H models use different random train/test splits for committee uncertainty, but split sizes, grouping rationale, model-selection use, and G-SchNet split manifests are not stated.",
+      "source_locations": [
+        "Supplementary Section 3, Validation of molecules at the edges of the distributions"
+      ]
+    },
+    {
+      "id": "M1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "The three-dimensional autoregressive representation and main G-SchNet hyperparameters are specified, including batch size 2, 10 angstrom cutoff, 128 features, nine interaction blocks, 25 Gaussian functions, and five sampled atom placements per molecule; random seeds are not stated.",
+      "source_locations": [
+        "Methods, G-SchNet model for molecule generation"
+      ]
+    },
+    {
+      "id": "T1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "The learning-rate rule, batch size, approximate loop duration, and SchNet+H hardware are reported, but final epoch counts, precision, matched training wall-clock statistics, and inference throughput are incomplete.",
+      "source_locations": [
+        "Methods, G-SchNet model for molecule generation",
+        "Methods, Computational details of the workflow for targeted design",
+        "Supplementary Section 5 and Supplementary Table 1"
+      ]
+    },
+    {
+      "id": "G1",
+      "category": "required",
+      "status": "reported",
+      "summary": "Per-loop candidate counts, structural filtering, property-based selection thresholds, retraining, and the 70-atom restriction introduced for ionisation-potential generation are stated.",
+      "source_locations": [
+        "Main text, Results, Workflow",
+        "Methods, Computational details of the workflow for targeted design",
+        "Supplementary Section 4 and Supplementary Data 1"
+      ]
+    },
+    {
+      "id": "E1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Property distributions, valid molecule counts, diversity analyses, committee disagreement, and higher-level electronic-structure checks are reported, but a formal novelty definition, one stagewise metric record, and uncertainty across independent generative runs are absent.",
+      "source_locations": [
+        "Main text, Results, Figs. 2-4",
+        "Supplementary Sections 1-4, Supplementary Figs. 1-11, and Supplementary Data 1"
+      ]
+    },
+    {
+      "id": "B1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Knockout experiments and comparisons between single- and multi-property biasing are included, but no matched random, retrieval, virtual-screening, or simple non-deep-learning baseline receives the same evaluator budget.",
+      "source_locations": [
+        "Main text, Results, Analysis of the generative model",
+        "Supplementary Sections 6-7 and Supplementary Figs. 5-10"
+      ]
+    },
+    {
+      "id": "F1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "SCScore is defined and applied as a synthetic-complexity proxy from canonical SMILES, but retrosynthesis settings, a route-level success criterion, and experimental synthesis validation are not included.",
+      "source_locations": [
+        "Methods, SCScore to predict the complexity of synthesizability of molecules",
+        "Supplementary Section 4"
+      ]
+    },
+    {
+      "id": "R1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Generated data, calculations, modified code releases, archived versions, and tutorials are linked, but no environment lockfile, split checksums, complete determinism record, or one-command rebuild is identified.",
+      "source_locations": [
+        "Data availability",
+        "Code availability"
+      ],
+      "artifacts": [
+        "https://doi.org/10.6084/m9.figshare.20146943.v2",
+        "https://doi.org/10.17172/NOMAD/2022.07.02-1",
+        "https://doi.org/10.5281/zenodo.7430248",
+        "https://doi.org/10.5281/zenodo.7424017",
+        "https://doi.org/10.14459/2019mp1507656"
+      ]
+    },
+    {
+      "id": "CL1",
+      "category": "context_dependent",
+      "status": "partially_reported",
+      "summary": "Iterative thresholds, two-model committee uncertainty, loop counts, and a qualitative stopping rule are described, but the stopping tolerance is not numerical and the complete evaluator budget is not consolidated.",
+      "source_locations": [
+        "Methods, Computational details of the workflow for targeted design",
+        "Supplementary Sections 3-4 and Supplementary Data 1"
+      ]
+    },
+    {
+      "id": "C1",
+      "category": "context_dependent",
+      "status": "partially_reported",
+      "summary": "Approximate loop and training times and the CPU and GPU systems are reported; candidate-throughput uncertainty and energy or carbon estimates are not.",
+      "source_locations": [
+        "Methods, Computational details of the workflow for targeted design",
+        "Supplementary Section 5 and Supplementary Table 1"
+      ]
+    },
+    {
+      "id": "GOV1",
+      "category": "context_dependent",
+      "status": "not_applicable",
+      "summary": "The study targets electronic properties of small organic molecules and does not expose a hazardous target, autonomous execution pathway, or access mechanism that makes a governance control material to the reported claim. Dataset and code licences are assessed under D1 and R1.",
+      "source_locations": [
+        "Main article, Workflow, Data availability, and Code availability"
+      ]
+    },
+    {
+      "id": "K1",
+      "category": "optional_summary",
+      "status": "partially_reported",
+      "summary": "Candidate counts, valid counts, loop numbers, validation subsets, and approximate compute are available, but are distributed across the article, Supplementary Information, and Supplementary Data.",
+      "source_locations": [
+        "Methods, Computational details of the workflow for targeted design",
+        "Supplementary Sections 1-5 and Supplementary Data 1"
+      ]
+    }
+  ],
+  "notes": "This is a disclosure audit rather than a methodological quality score. No unreported detail was inferred."
+}

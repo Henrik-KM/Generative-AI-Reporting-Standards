@@ -1,0 +1,450 @@
+{
+  "note": "Panel a plots, for each campaign, the number of candidates remaining after the last reported stage at each evidence level. A candidate that has passed a high-fidelity computation remains at that level while further computational criteria are applied. Every reported stage is listed below with its source location. Counts are numbers of candidates. The SyntheMol total is the sum of three stated generation runs and is not itself stated in the source. Stages that a campaign does not contain are omitted rather than interpolated. Panel b divides the count at the endpoint of each campaign by the number of candidates generated, passed to high-fidelity evaluation, or attempted experimentally. Panel c reproduces stability rates from the matched comparison of Szymanski and Bartel. The values and the script that draws Figure 2 from them are provided as Supplementary Data 1.",
+  "campaigns": [
+    {
+      "id": "gentrl",
+      "label": "GENTRL, DDR1 inhibitors",
+      "short": "GENTRL",
+      "cite": "Zhavoronkov2019NatBiotech",
+      "domain": "Molecules and polymers",
+      "engine": "generative",
+      "endpoint": "Active in biochemical assay",
+      "label_offset": [
+        6,
+        5
+      ],
+      "denominators": {
+        "generated": 30000,
+        "attempted": 6
+      },
+      "stages": [
+        {
+          "label": "Initial output of the generative model",
+          "count": 30000,
+          "type": "generated",
+          "source": "Main text p. 1038; Methods, Molecule generation and selection procedure"
+        },
+        {
+          "label": "Molecular descriptor thresholds",
+          "count": 12147,
+          "type": "fast",
+          "source": "Methods, Molecule generation and selection procedure"
+        },
+        {
+          "label": "Medicinal-chemistry and structural-alert filters",
+          "count": 7912,
+          "type": "fast",
+          "source": "Methods, same section"
+        },
+        {
+          "label": "Clustering and diversity sorting",
+          "count": 5542,
+          "type": "fast",
+          "source": "Methods, same section"
+        },
+        {
+          "label": "Classified as kinase inhibitors (self-organising map)",
+          "count": 2570,
+          "type": "surrogate",
+          "source": "Methods, same section"
+        },
+        {
+          "label": "Classified as DDR1 inhibitors (self-organising map)",
+          "count": 1951,
+          "type": "surrogate",
+          "source": "Methods, same section"
+        },
+        {
+          "label": "Matching a pharmacophore hypothesis",
+          "count": 848,
+          "type": "surrogate",
+          "source": "Methods, same section"
+        },
+        {
+          "label": "Selected to cover chemical space and RMSD distribution",
+          "count": 40,
+          "type": "surrogate",
+          "source": "Main text; Methods; Fig. 1a"
+        },
+        {
+          "label": "Synthesised and tested in enzymatic assay",
+          "count": 6,
+          "type": "attempted",
+          "source": "Main text; Fig. 1a,c"
+        },
+        {
+          "label": "Active in biochemical assay",
+          "count": 4,
+          "type": "confirmed",
+          "source": "Abstract; main text; Fig. 1c"
+        }
+      ]
+    },
+    {
+      "id": "synthemol",
+      "label": "SyntheMol, antibiotics",
+      "short": "SyntheMol",
+      "cite": "Swanson2024SyntheMol",
+      "domain": "Molecules and polymers",
+      "engine": "generative",
+      "endpoint": "Active against A. baumannii",
+      "label_offset": [
+        6,
+        -2
+      ],
+      "denominators": {
+        "generated": 77559,
+        "attempted": 58
+      },
+      "stages": [
+        {
+          "label": "Generated with three property models (sum of 24,335, 25,828 and 27,396)",
+          "count": 77559,
+          "type": "generated",
+          "source": "Fig. 4 caption; Extended Data Figs. 7 and 8"
+        },
+        {
+          "label": "Synthesised and tested for growth inhibition",
+          "count": 58,
+          "type": "attempted",
+          "source": "Abstract; Extended Data Fig. 9"
+        },
+        {
+          "label": "Active (MIC at most 8 µg/mL)",
+          "count": 6,
+          "type": "confirmed",
+          "source": "Abstract; Extended Data Figs. 9 and 10"
+        }
+      ]
+    },
+    {
+      "id": "polyverse",
+      "label": "polyVERSE, polymer dielectrics",
+      "short": "polyVERSE",
+      "cite": "Gurnani2024Dielectrics",
+      "domain": "Molecules and polymers",
+      "engine": "enumeration",
+      "endpoint": null,
+      "label_offset": [
+        6,
+        0
+      ],
+      "denominators": {},
+      "stages": [
+        {
+          "label": "ROMP polymers enumerated from available monomers",
+          "count": 26858,
+          "type": "generated",
+          "source": "Results, AI-assisted dielectric design"
+        },
+        {
+          "label": "Top-ranked shortlist after multitask GNN screen (number passing the thresholds not reported)",
+          "count": 12,
+          "type": "surrogate",
+          "source": "Results, AI-assisted dielectric design; Supplementary Section S2"
+        },
+        {
+          "label": "Selected as synthetic targets",
+          "count": 5,
+          "type": "surrogate",
+          "source": "Results, AI-assisted dielectric design"
+        },
+        {
+          "label": "Synthesised and characterised",
+          "count": 4,
+          "type": "attempted",
+          "source": "Results, Energy storage performance"
+        }
+      ]
+    },
+    {
+      "id": "mattergen",
+      "label": "MatterGen, bulk modulus",
+      "short": "MatterGen",
+      "cite": "Zeni2025",
+      "domain": "Inorganic crystals",
+      "engine": "generative",
+      "endpoint": "Target phase obtained",
+      "label_offset": [
+        6,
+        -5
+      ],
+      "denominators": {
+        "generated": 32768,
+        "high_fidelity": 119,
+        "attempted": 4
+      },
+      "stages": [
+        {
+          "label": "Generated at four bulk-modulus targets",
+          "count": 32768,
+          "type": "generated",
+          "source": "SI D.10.1"
+        },
+        {
+          "label": "Oxygen-containing",
+          "count": 7919,
+          "type": "fast",
+          "source": "SI D.10.3, step 1"
+        },
+        {
+          "label": "MatterSim energy above hull at most 0.05 eV/atom",
+          "count": 2196,
+          "type": "surrogate",
+          "source": "SI D.10.3, step 2"
+        },
+        {
+          "label": "Unique and not in the Alex-MP-ICSD reference set",
+          "count": 551,
+          "type": "surrogate",
+          "source": "SI D.10.3, step 3"
+        },
+        {
+          "label": "No negative phonon modes (MatterSim)",
+          "count": 119,
+          "type": "surrogate",
+          "source": "SI D.10.3, step 4"
+        },
+        {
+          "label": "DFT energy above hull at most 0.03 eV/atom",
+          "count": 75,
+          "type": "high_fidelity",
+          "source": "SI D.10.3, step 5"
+        },
+        {
+          "label": "Synthesis attempted",
+          "count": 4,
+          "type": "attempted",
+          "source": "SI D.10.3, step 6; D.10.5"
+        },
+        {
+          "label": "Target phase obtained (TaCr2O6; novelty later disputed)",
+          "count": 1,
+          "type": "confirmed",
+          "source": "SI D.10.4 to D.10.6; main text p. 631"
+        }
+      ]
+    },
+    {
+      "id": "wines",
+      "label": "CDVAE, superconductors",
+      "short": "CDVAE",
+      "cite": "Wines2023JPCL",
+      "domain": "Inorganic crystals",
+      "engine": "generative",
+      "endpoint": "DFT Tc above 5 K and dynamically stable",
+      "label_offset": [
+        6,
+        0
+      ],
+      "denominators": {
+        "generated": 3000,
+        "high_fidelity": 61
+      },
+      "stages": [
+        {
+          "label": "Generated with CDVAE",
+          "count": 3000,
+          "type": "generated",
+          "source": "Abstract; Fig. 1a"
+        },
+        {
+          "label": "ALIGNN-predicted Tc above 5 K, negative formation energy, metallic",
+          "count": 61,
+          "type": "surrogate",
+          "source": "Main text, ALIGNN screening; Fig. 1a"
+        },
+        {
+          "label": "DFT Tc above 5 K",
+          "count": 32,
+          "type": "high_fidelity",
+          "source": "Main text; Fig. 1a"
+        },
+        {
+          "label": "No negative phonon frequencies (DFT)",
+          "count": 25,
+          "type": "high_fidelity",
+          "source": "Main text; Fig. 1a; Table 1"
+        }
+      ]
+    },
+    {
+      "id": "chen",
+      "label": "Substitution, solid electrolytes",
+      "short": "Substitution",
+      "cite": "Chen2024CloudScreening",
+      "domain": "Inorganic crystals",
+      "engine": "enumeration",
+      "endpoint": "Synthesised as predicted",
+      "label_offset": [
+        6,
+        5
+      ],
+      "denominators": {
+        "generated": 32598079,
+        "high_fidelity": 771,
+        "attempted": 4
+      },
+      "stages": [
+        {
+          "label": "Candidates from isovalent substitution into ICSD prototypes",
+          "count": 32598079,
+          "type": "generated",
+          "source": "Fig. 2a (preprint arXiv:2401.04070)"
+        },
+        {
+          "label": "M3GNet energy above hull below 50 meV/atom",
+          "count": 589609,
+          "type": "surrogate",
+          "source": "Fig. 2a"
+        },
+        {
+          "label": "Li mole fraction at least 0.1",
+          "count": 197744,
+          "type": "surrogate",
+          "source": "Fig. 2b"
+        },
+        {
+          "label": "Predicted band gap above 3 eV",
+          "count": 8795,
+          "type": "surrogate",
+          "source": "Fig. 2b"
+        },
+        {
+          "label": "Predicted electrochemical window",
+          "count": 771,
+          "type": "surrogate",
+          "source": "Fig. 2b"
+        },
+        {
+          "label": "DFT energy above hull below 50 meV/atom",
+          "count": 583,
+          "type": "high_fidelity",
+          "source": "Fig. 2b"
+        },
+        {
+          "label": "ML molecular-dynamics diffusivity criteria",
+          "count": 147,
+          "type": "high_fidelity",
+          "source": "Main text; Fig. 2b"
+        },
+        {
+          "label": "Cost, softness and density criteria",
+          "count": 23,
+          "type": "high_fidelity",
+          "source": "Fig. 2b"
+        },
+        {
+          "label": "Compositions not previously reported",
+          "count": 18,
+          "type": "high_fidelity",
+          "source": "Fig. 2 caption"
+        },
+        {
+          "label": "Experimental targets",
+          "count": 4,
+          "type": "attempted",
+          "source": "Section 2.5; Table 1"
+        },
+        {
+          "label": "Synthesised in the predicted structure (Na2LiYCl6)",
+          "count": 1,
+          "type": "confirmed",
+          "source": "Section 2.6.1"
+        }
+      ]
+    },
+    {
+      "id": "mofassemble",
+      "label": "GHP-MOFassemble, CO2 capture",
+      "short": "GHP-MOFassemble",
+      "cite": "Park2024CommsChem",
+      "domain": "Porous materials",
+      "engine": "generative",
+      "endpoint": "GCMC CO2 capacity above target",
+      "label_offset": [
+        6,
+        0
+      ],
+      "denominators": {
+        "generated": 120000,
+        "high_fidelity": 364
+      },
+      "stages": [
+        {
+          "label": "MOFs assembled from generated linkers",
+          "count": 120000,
+          "type": "generated",
+          "source": "Results, MOF assembly"
+        },
+        {
+          "label": "Inter-atomic distance check",
+          "count": 78796,
+          "type": "fast",
+          "source": "Methods, Inter-atomic distance check"
+        },
+        {
+          "label": "Pre-simulation check",
+          "count": 18770,
+          "type": "fast",
+          "source": "Methods, Pre-simulation check"
+        },
+        {
+          "label": "CGCNN-predicted CO2 capacity above 2 mmol/g at 0.1 bar",
+          "count": 364,
+          "type": "surrogate",
+          "source": "Results, Regression model"
+        },
+        {
+          "label": "Structurally stable in MD (lattice change below 5%)",
+          "count": 102,
+          "type": "high_fidelity",
+          "source": "Results, Structural validation"
+        },
+        {
+          "label": "GCMC CO2 capacity above 2 mmol/g",
+          "count": 6,
+          "type": "high_fidelity",
+          "source": "Results, Property validation; Discussion"
+        }
+      ]
+    }
+  ],
+  "baselines": {
+    "cite": "Szymanski2025Baselines",
+    "source": "Table 1 (arXiv:2501.02144v2)",
+    "metric": "Share of 500 novel candidates on or below the convex hull after DFT relaxation (%)",
+    "methods": [
+      {
+        "label": "Random enumeration",
+        "kind": "baseline",
+        "value": 1.4
+      },
+      {
+        "label": "Ion exchange",
+        "kind": "baseline",
+        "value": 9.2
+      },
+      {
+        "label": "CDVAE",
+        "kind": "generative",
+        "value": 1.8
+      },
+      {
+        "label": "FTCP",
+        "kind": "generative",
+        "value": 2.0
+      },
+      {
+        "label": "CrystaLLM",
+        "kind": "generative",
+        "value": 2.4
+      },
+      {
+        "label": "MatterGen",
+        "kind": "generative",
+        "value": 3.0
+      }
+    ]
+  }
+}

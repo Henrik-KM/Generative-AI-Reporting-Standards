@@ -1,25 +1,27 @@
-# Reporting Checklist for Generative Materials Design
+# A reporting protocol for generative materials design
 
-This repository provides a lightweight reporting checklist for generative materials design studies. It treats the complete workflow, from data and candidate generation to filtering, evaluator use, and validation, as the unit that should be reported. The checklist does not prescribe one preferred discovery pipeline or treat reporting completeness as a substitute for scientific assessment.
+Generative models can now propose candidate materials far faster than they can be validated. The scientifically relevant outcome of a study is therefore the small subset of candidates that survives filtering and evaluation, and whether a reported advance reflects a better model, a different filter, a more permissive evaluator, or a larger validation budget can only be judged from the complete workflow. This repository provides a reporting protocol that treats that workflow, from data and candidate generation through filters and evaluators to validated outcomes, as the unit of reporting. The protocol does not prescribe a preferred pipeline, and a complete record does not by itself establish that the chosen methods, thresholds, or conclusions are appropriate.
 
 ## Repository contents
 
-- [checklist.md](checklist.md) contains the canonical checklist wording and stable identifiers.
-- [templates/author_response_template.md](templates/author_response_template.md) and [templates/author_response_template.tex](templates/author_response_template.tex) provide short author-response forms.
-- [schema/reporting-checklist.schema.json](schema/reporting-checklist.schema.json) defines the machine-readable JSON format.
-- [examples](examples) contains three retrospective worked examples spanning molecular design, inorganic crystal generation, and active-learning crystal structure search.
-- [tools/validate.py](tools/validate.py) checks required fields, item coverage, allowed disclosure states, and basic field types using only the Python standard library.
+- [checklist.md](checklist.md) gives the protocol (version 1.0.0): eight steps, from stating the claim and its evidence level to summarising the key numbers, with stable machine-readable identifiers.
+- [templates](templates) contains an author-record template in Markdown, LaTeX, and PDF.
+- [schema/reporting-checklist.schema.json](schema/reporting-checklist.schema.json) defines the machine-readable format for author records, records completed from publications, and retrospective audits, including an optional structured stage ledger.
+- [examples](examples) contains two worked records completed from publications, for an active-learning study of high-entropy oxygen carriers and for the MatterGen bulk-modulus campaign, and two retrospective audits.
+- [tools/validate.py](tools/validate.py) checks records for completeness, allowed answers, and basic types using only the Python standard library.
+- [figure2](figure2) contains the stage counts and plotting script for Figure 2 of the accompanying article.
+- [legacy/v0.2.0](legacy/v0.2.0) preserves the previous version of the checklist, schema, validator, templates, and audits unchanged.
 
 ## Use in a manuscript
 
-1. Summarise the nine required items in the main text and place full protocol details in the Supplementary Information or a versioned repository when needed.
-2. Retain the stable item identifiers and give an exact source location for each response.
-3. Include the three context-dependent items and use `not_applicable` only when the corresponding workflow component or material concern is absent, with a brief rationale.
-4. State and justify any deviation from the checklist.
+1. Complete one entry per item of [checklist.md](checklist.md), in the Supplementary Information or in a versioned repository, stating the choice or value that was actually used and the location of the details.
+2. Answer every item with a value, as `not_applicable` with the reason the component is absent, or as `not_performed` with the consequence for the claim.
+3. Include the stage ledger, with candidate counts and evaluator calls at every stage.
+4. Summarise the key numbers in one or two sentences in the main text.
 
-The machine-readable format uses four disclosure states: `reported`, `partially_reported`, `not_reported`, and `not_applicable`. These states describe reporting completeness. In particular, `not_reported` does not imply that the underlying method was inadequate.
+When a record is completed from a publication rather than by its authors, a fourth answer, `not_stated`, marks information that only the authors could supply. Retrospective audits by readers or reviewers instead assign one of four disclosure states: `reported`, `partially_reported`, `not_reported`, or `not_applicable`.
 
-## Validate a JSON response
+## Validate a record
 
 Python 3.9 or newer is sufficient; no packages need to be installed.
 
@@ -27,12 +29,8 @@ Python 3.9 or newer is sufficient; no packages need to be installed.
 python tools/validate.py examples
 ```
 
-The same command accepts one JSON file or a directory containing JSON files. The validator intentionally checks structure and completeness only. It does not judge whether a scientific method, threshold, baseline, or conclusion is appropriate.
-
-## Worked examples
-
-The examples apply the checklist retrospectively to three published studies. Each item contains a concise disclosure judgement and the section, figure, table, or availability statement from which it was derived. They demonstrate how information can be assembled when it is distributed across an article, Supplementary Information, and public artefacts; they are not rankings of the studies.
+The command accepts one JSON file or a directory of JSON files. Records with `checklist_version` 0.2.0 are checked with the archived version 0.2.0 validator. The validator checks structure and completeness only; it does not judge whether a scientific method, threshold, baseline, or conclusion is appropriate.
 
 ## Citation and licence
 
-Please cite the associated review article using [CITATION.cff](CITATION.cff). Until publication, the journal details remain provisional. The checklist text is licensed under CC BY 4.0; see [LICENSE](LICENSE).
+Please cite this repository using [CITATION.cff](CITATION.cff); the associated article is in preparation. The protocol text, templates, schema, examples, and code are licensed under CC BY 4.0; see [LICENSE](LICENSE). The changes from version 0.2.0, and the reason for each, are listed in [CHANGELOG.md](CHANGELOG.md).

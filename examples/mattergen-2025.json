@@ -1,146 +1,230 @@
 {
-  "checklist_version": "0.2.0",
-  "record_type": "retrospective_audit",
+  "checklist_version": "1.0.0",
+  "record_type": "publication_record",
   "study": {
     "title": "A generative model for inorganic materials design",
-    "citation": "Zeni C et al. Nature 639, 624-632 (2025).",
+    "citation": "Zeni et al., Nature 639, 624-632 (2025).",
     "doi": "10.1038/s41586-025-08628-5",
-    "workflow_type": "Unconditional and property-conditioned inorganic crystal generation with computational and experimental validation",
-    "assessment_scope": "Published article, Supplementary Information, and data and code availability statements; released artefacts were identified but the analysis was not rerun.",
-    "audit_date": "2026-07-20"
+    "workflow_type": "Single-pass property-conditioned diffusion generation with machine-learning-potential and DFT screening and experimental synthesis",
+    "assessment_scope": "Completed from the article and its Supplementary Information only. The record covers the bulk-modulus synthesis campaign.",
+    "record_date": "2026-10-08"
   },
   "items": [
     {
-      "id": "D1",
-      "category": "required",
-      "status": "partially_reported",
-      "summary": "Alex-MP-20 size and selection, source versions and licences, DFT harmonisation, deduplication, and the extended ICSD novelty reference are described; split manifests, hashes, cross-split collision rates, and shortcut or perturbation checks are not reported.",
+      "id": "claim",
+      "answer": "value",
+      "entry": "Generation conditioned on a target bulk modulus produces a candidate that can be synthesised and whose measured bulk modulus lies within 20% of the 200 GPa target. Evidence level: experiment, with one target phase obtained from four synthesis attempts. Comparisons elsewhere in the study concern the rate of stable, unique, and novel structures relative to CDVAE and DiffCSP, and performance relative to substitution and random structure search in selected chemical systems.",
       "source_locations": [
-        "Supplementary Sections C.1-C.2 and Fig. C3",
-        "Main text, Methods, Data"
+        "Zeni et al., Nature 639, 624-632 (2025), Experimental validation and Figs. 2-3 and 6",
+        "SI D.5-D.6 and D.10"
       ]
     },
     {
-      "id": "S1",
-      "category": "required",
-      "status": "partially_reported",
-      "summary": "Training-set selection, excluded experimental systems, and task-specific conditional data are described, but complete train/validation/test sizes, reusable manifests, and a study-wide account of model-selection data are not provided.",
-      "source_locations": [
-        "Supplementary Section C.1",
-        "Supplementary Sections D.6-D.10"
-      ]
-    },
-    {
-      "id": "M1",
-      "category": "required",
-      "status": "partially_reported",
-      "summary": "The diffusion variables, GemNet backbone, architecture, and fine-tuning method are detailed, but random seeds are not stated.",
-      "source_locations": [
-        "Main text, Methods, Model",
-        "Supplementary Sections A.1-A.10 and B.1"
-      ]
-    },
-    {
-      "id": "T1",
-      "category": "required",
-      "status": "partially_reported",
-      "summary": "Base-model and fine-tuning steps, Adam optimisation, learning-rate rules, batch sizes, and eight A100 GPUs are specified; wall-clock distributions, numerical precision, and inference throughput are not.",
-      "source_locations": [
-        "Supplementary Sections D.1.1-D.1.2"
-      ]
-    },
-    {
-      "id": "G1",
-      "category": "required",
-      "status": "reported",
-      "summary": "Unconditional and conditional targets, classifier-free guidance, 1,000 reverse-diffusion steps, one Langevin corrector, sample counts, element masks, relaxation, and rejection procedures are specified.",
-      "source_locations": [
-        "Supplementary Sections B.2 and D.1.3",
-        "Supplementary Sections D.5-D.10",
-        "Main-text figure captions"
-      ]
-    },
-    {
-      "id": "E1",
-      "category": "required",
-      "status": "partially_reported",
-      "summary": "Stability, uniqueness, novelty, and relaxation RMSD are defined with the evaluation stage, structure-matcher tolerances, and sensitivity analysis; uncertainty across independent generative runs is not reported for the principal metrics.",
-      "source_locations": [
-        "Supplementary Sections D.3-D.4 and Table D3",
-        "Supplementary Sections D.5-D.9"
-      ]
-    },
-    {
-      "id": "B1",
-      "category": "required",
-      "status": "reported",
-      "summary": "MatterGen is compared with CDVAE and DiffCSP and ablated by component. Substitution and random structure search use the same machine-learning force-field screen and a common budget of 100 DFT relaxations per chemical system.",
-      "source_locations": [
-        "Supplementary Sections A.10-A.11 and Table A2",
-        "Supplementary Sections D.5.2 and D.6.1 and Table D5"
-      ]
-    },
-    {
-      "id": "F1",
-      "category": "required",
-      "status": "reported",
-      "summary": "The bulk-modulus workflow separates composition filtering, machine-learning-potential stability, novelty, phonons, DFT stability, expert selection, synthesis, and measurement, and reports the complete attrition from 32,768 candidates to four synthesis attempts and one confirmed product, with synthesis conditions and failures reported separately.",
-      "source_locations": [
-        "Supplementary Sections D.10.1 and D.10.3-D.10.6"
-      ]
-    },
-    {
-      "id": "R1",
-      "category": "required",
-      "status": "partially_reported",
-      "summary": "Training data, model code, pretrained checkpoints, evaluation code, and data licences are linked, but no complete environment lockfile, split-file checksums, determinism record, or single rebuild command is identified.",
-      "source_locations": [
-        "Main text, Data availability and Code availability",
-        "Supplementary Section C.1"
+      "id": "stage_ledger",
+      "answer": "value",
+      "entry": "Given in stage_ledger below.",
+      "not_stated": [
+        "cost per evaluator call"
       ],
-      "artifacts": [
-        "https://github.com/microsoft/mattergen"
+      "source_locations": [
+        "SI D.10.1-D.10.6"
       ]
     },
     {
-      "id": "CL1",
-      "category": "context_dependent",
-      "status": "not_applicable",
-      "summary": "The reported generation and down-selection workflows do not retrain the generator or acquire new labels across sequential rounds; their multi-stage screening is covered by G1, E1, and F1.",
+      "id": "data",
+      "answer": "value",
+      "entry": "Training set Alex-MP-20: 607,683 structures with at most 20 atoms and energy above hull below 0.1 eV/atom from the Materials Project (v2022.10.28) and Alexandria, both CC BY 4.0, recomputed with Materials Project settings and deduplicated with emmet; well-explored chemical systems and ICSD-only structures excluded. Reference set Alex-MP-ICSD (850,384 structures), extended with 117,652 disordered ICSD structures for novelty. Fine-tuning on approximately 5,000 DFT bulk-modulus labels. Matching rule: ordered-disordered structure matcher, compared with the pymatgen StructureMatcher (ltol 0.2, stol 0.3, angle_tol 5).",
+      "not_stated": [
+        "cross-split collision rate"
+      ],
       "source_locations": [
-        "Main text, Fig. 5",
-        "Supplementary Section D.10"
+        "Main text, Methods",
+        "SI C.1, D.4, and D.8.1"
       ]
     },
     {
-      "id": "C1",
-      "category": "context_dependent",
-      "status": "partially_reported",
-      "summary": "Accelerator type and count, optimisation steps, and batch sizes are reported, but training and inference wall-clock distributions, candidates per GPU-hour, and energy or carbon estimates are not.",
+      "id": "splits",
+      "answer": "value",
+      "entry": "Training and validation sets are split independently and identically; experimental ICSD structures absent from the Materials Project at the cut-off date form a temporal test set of 4,387 structures, and a further 1,739 ICSD structures fall in the validation split.",
       "source_locations": [
-        "Supplementary Sections D.1.1-D.1.3"
+        "SI C.1 and D.7"
       ]
     },
     {
-      "id": "GOV1",
-      "category": "context_dependent",
-      "status": "not_applicable",
-      "summary": "The reported workflow targets stable inorganic crystals and does not expose a hazardous target, autonomous execution pathway, or access mechanism that makes a governance control material to the claim. Dataset licences are assessed under D1 and R1; prospective experiments are assessed under F1.",
+      "id": "model",
+      "answer": "value",
+      "entry": "Diffusion over atom types, fractional coordinates, and lattice with a GemNet score network; property conditioning by fine-tuning with adapter modules and classifier-free guidance.",
+      "not_stated": [
+        "random seeds"
+      ],
       "source_locations": [
-        "Main text, Methods and Data availability",
-        "Supplementary Sections C.1 and D.10"
+        "SI A and B.1-B.2"
       ]
     },
     {
-      "id": "K1",
-      "category": "optional_summary",
-      "status": "partially_reported",
-      "summary": "The main computational sample counts and experimental attrition funnel are recoverable, but training cost, inference throughput, and one consolidated record spanning all generation tasks are not provided.",
+      "id": "training",
+      "answer": "value",
+      "entry": "Base model: 1.74 million steps, batch size 64 per GPU on eight A100 GPUs, Adam, initial learning rate 1e-4 with ReduceLROnPlateau (factor 0.6, patience 100). Fine-tuning: global batch size 128, initial learning rate 6e-5, gradient clipping at 0.5, stopped after 100 epochs without improvement in validation loss.",
+      "not_stated": [
+        "numerical precision",
+        "wall-clock time"
+      ],
       "source_locations": [
-        "Main text, Figs. 2-5",
-        "Supplementary Sections D.5-D.10"
+        "SI D.1.1-D.1.2"
+      ]
+    },
+    {
+      "id": "generation",
+      "answer": "value",
+      "entry": "Targets of 50, 100, 150, and 200 GPa with 8,192 samples each; 1,000 reverse-diffusion steps with one Langevin corrector step per predictor step; an element mask excluding 27 elements for toxicity, price, availability, or handling.",
+      "not_stated": [
+        "inference throughput"
+      ],
+      "source_locations": [
+        "SI D.1.3 and D.10.1"
+      ]
+    },
+    {
+      "id": "evaluation",
+      "answer": "value",
+      "entry": "Success in this campaign: a target phase obtained by synthesis, with a measured bulk modulus within 20% of the target. The obtained phase has a DFT bulk modulus of 222 GPa for its ordered structure; nanoindentation gives 158 ± 11 GPa over four measurements, up to 169 GPa. Novelty: absence from Alex-MP-ICSD under the ordered-disordered matcher, with the sensitivity of uniqueness and novelty to the choice of matcher reported. The novelty of the obtained phase has since been disputed (Juelsholt, Materials Horizons 13, 5672-5679, 2026).",
+      "not_stated": [
+        "uncertainty across independent generation runs"
+      ],
+      "source_locations": [
+        "Zeni et al., Nature 639, 624-632 (2025), Experimental validation",
+        "SI D.4 and Table D3"
+      ]
+    },
+    {
+      "id": "feasibility",
+      "answer": "value",
+      "entry": "Composition: oxygen-containing candidates only. Thermodynamic stability: MatterSim energy above hull <= 0.05 eV/atom, then DFT <= 0.03 eV/atom with PBE, Hubbard U corrections, and Materials Project settings. Dynamical stability: MatterSim phonons with phonopy, supercells of about 300 atoms, 0.03 Å displacements; structures with negative modes removed. Synthesizability: expert selection by number of elements, precursor availability, and predicted local coordination; solid-state synthesis with X-ray diffraction and Rietveld refinement; three unsuccessful attempts reported.",
+      "source_locations": [
+        "SI C.2 and D.10.3-D.10.6"
+      ]
+    },
+    {
+      "id": "baselines",
+      "answer": "value",
+      "entry": "Generative baselines CDVAE and DiffCSP; substitution and random structure search in selected chemical systems, relaxed with MatterSim and advanced to a common budget of 100 DFT calculations per system; for property-targeted generation, a screening baseline that selects training structures by predicted bulk modulus at the same DFT budget; component-wise ablations. No baseline is reported for the synthesis campaign itself.",
+      "source_locations": [
+        "SI A.10-A.11, D.5-D.6, and D.8.1"
+      ]
+    },
+    {
+      "id": "closed_loop",
+      "answer": "not_applicable",
+      "entry": "No labels are acquired iteratively.",
+      "source_locations": []
+    },
+    {
+      "id": "reproducibility",
+      "answer": "value",
+      "entry": "Source code, the Alex-MP training data, CIF files of the reported structures, and the nanoindentation and X-ray diffraction data are publicly available; ICSD identifiers are listed, with structures available under a commercial licence.",
+      "not_stated": [
+        "environment lockfile",
+        "single rebuild command"
+      ],
+      "source_locations": [
+        "Zeni et al., Nature 639, 624-632 (2025), Data availability and Code availability"
+      ]
+    },
+    {
+      "id": "compute",
+      "answer": "value",
+      "entry": "Eight A100 GPUs for training.",
+      "not_stated": [
+        "cost of MatterSim and DFT evaluations"
+      ],
+      "source_locations": [
+        "SI D.1.1"
+      ]
+    },
+    {
+      "id": "governance",
+      "answer": "not_applicable",
+      "entry": "Stable inorganic oxides targeted for mechanical properties; no hazardous target, autonomous execution pathway, or access restriction.",
+      "source_locations": []
+    },
+    {
+      "id": "key_numbers",
+      "answer": "value",
+      "entry": "32,768 structures generated at four bulk-modulus targets; 7,919 containing oxygen; 2,196 within the MatterSim hull threshold; 551 unique and novel; 119 without imaginary phonon modes and evaluated with DFT; 75 within the DFT hull threshold; four synthesis attempts; one target phase obtained, with a measured bulk modulus within 20% of the target.",
+      "source_locations": [
+        "SI D.10.1-D.10.6"
       ]
     }
   ],
-  "notes": "This is a disclosure audit rather than a methodological quality score. No unreported detail was inferred."
+  "stage_ledger": [
+    {
+      "stage": "Generation",
+      "rule": "Fine-tuned MatterGen; 8,192 samples at each of 50, 100, 150, and 200 GPa; 27 elements masked",
+      "n_in": null,
+      "n_out": 32768,
+      "evaluator_calls": null,
+      "source": "SI D.10.1"
+    },
+    {
+      "stage": "Composition",
+      "rule": "Oxygen-containing",
+      "n_in": 32768,
+      "n_out": 7919,
+      "evaluator_calls": null,
+      "source": "SI D.10.3, step 1"
+    },
+    {
+      "stage": "ML stability",
+      "rule": "MatterSim energy above hull <= 0.05 eV/atom",
+      "n_in": 7919,
+      "n_out": 2196,
+      "evaluator_calls": 7919,
+      "cost_per_call": null,
+      "source": "SI D.10.3, step 2"
+    },
+    {
+      "stage": "Novelty",
+      "rule": "Unique and absent from Alex-MP-ICSD",
+      "n_in": 2196,
+      "n_out": 551,
+      "evaluator_calls": null,
+      "source": "SI D.10.3, step 3"
+    },
+    {
+      "stage": "Dynamical stability",
+      "rule": "MatterSim phonons; no negative modes",
+      "n_in": 551,
+      "n_out": 119,
+      "evaluator_calls": 551,
+      "cost_per_call": null,
+      "source": "SI D.10.3, step 4"
+    },
+    {
+      "stage": "DFT stability",
+      "rule": "DFT energy above hull <= 0.03 eV/atom",
+      "n_in": 119,
+      "n_out": 75,
+      "evaluator_calls": 119,
+      "cost_per_call": null,
+      "source": "SI D.10.3, step 5"
+    },
+    {
+      "stage": "Synthesis",
+      "rule": "Expert selection; solid-state synthesis and X-ray diffraction",
+      "n_in": 75,
+      "n_out": 4,
+      "evaluator_calls": 4,
+      "cost_per_call": null,
+      "source": "SI D.10.3, step 6"
+    },
+    {
+      "stage": "Outcome",
+      "rule": "Target phase obtained",
+      "n_in": 4,
+      "n_out": 1,
+      "evaluator_calls": null,
+      "source": "SI D.10.4-D.10.6"
+    }
+  ],
+  "notes": "Null counts and costs are not stated in the publication. Evaluator calls equal the number of candidates evaluated at that stage."
 }

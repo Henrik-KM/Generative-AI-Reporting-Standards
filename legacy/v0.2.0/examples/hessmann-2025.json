@@ -1,0 +1,152 @@
+{
+  "checklist_version": "0.2.0",
+  "record_type": "retrospective_audit",
+  "study": {
+    "title": "Accelerating crystal structure search through active learning with neural networks for rapid relaxations",
+    "citation": "Hessmann SSP et al. npj Computational Materials 11, 44 (2025).",
+    "doi": "10.1038/s41524-025-01523-7",
+    "workflow_type": "Active-learning crystal structure search with ensemble force-field relaxation and DFT labelling",
+    "assessment_scope": "Published article, Supplementary Information, data and code availability statements, linked data and code records, and released configuration files; the analysis was not rerun.",
+    "audit_date": "2026-07-20"
+  },
+  "items": [
+    {
+      "id": "D1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Initial and final candidate pools, acquired training structures, DFT-validated structures, and final ensembles are deposited, and the linked DepositOnce data record identifies a CC BY 4.0 licence. Generation constraints are stated, but stable item hashes, a duplicate rule with cross-split collision rate, and shortcut or perturbation checks are not reported.",
+      "source_locations": [
+        "Main text, Initial structure generation",
+        "Methods, Constraints for initial structure generation",
+        "Data availability",
+        "DepositOnce DOI 10.14279/depositonce-21008"
+      ]
+    },
+    {
+      "id": "S1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "A 20% validation split monitors ensemble training, but the grouping strategy, split manifest, random seeds, and independent test protocol are not stated.",
+      "source_locations": [
+        "Methods, Neural network models"
+      ]
+    },
+    {
+      "id": "M1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "The five-model SO(3)-equivariant ensemble, input representation, two interaction layers, 64 features, lmax=2, and 7 angstrom cutoff are described; random seeds are not provided.",
+      "source_locations": [
+        "Main text, Neural network models",
+        "Methods, Neural network models"
+      ]
+    },
+    {
+      "id": "T1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Adam optimisation, batch size 10, initial learning rate 0.0005, validation-based scheduling, loss weights, and device allocation are reported; epoch counts, precision, wall-clock uncertainty for training, and matched inference throughput are incomplete.",
+      "source_locations": [
+        "Methods, Neural network models",
+        "Supplementary Section B, Runtime evaluation"
+      ]
+    },
+    {
+      "id": "G1",
+      "category": "required",
+      "status": "reported",
+      "summary": "Random and symmetry-constrained generation, interatomic-distance and lattice constraints, pool sizes, rejection rules, clustering, machine-learning relaxation, and final DFT relaxation are specified.",
+      "source_locations": [
+        "Main text, Initial structure generation through Structure relaxation",
+        "Methods, Constraints for initial structure generation",
+        "Table 1"
+      ]
+    },
+    {
+      "id": "E1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "DFT evaluations needed to recover low-energy structures, relaxation outcomes, and mean and standard deviation over three simulations per composition are reported; general validity, novelty, and diversity definitions are not part of the evaluation.",
+      "source_locations": [
+        "Results, Global energy minimum and Fig. 3",
+        "Results, Multiple low-energy structures and Fig. 4"
+      ]
+    },
+    {
+      "id": "B1",
+      "category": "required",
+      "status": "reported",
+      "summary": "The method is compared with random search, Bayesian optimisation, and learning-accelerated local search. The paper notes that the baselines stop once the target is found, making their evaluation counts optimistic lower bounds relative to the proposed convergence criterion.",
+      "source_locations": [
+        "Results, Global energy minimum and Fig. 3"
+      ]
+    },
+    {
+      "id": "F1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Machine-learning relaxations are escalated to DFT under a pinned Quantum ESPRESSO, PAW, PBE, pseudopotential, cutoff, k-point, force-convergence, and timeout protocol. The study establishes low-energy structures under these settings but does not make or validate route-specific synthesizability claims.",
+      "source_locations": [
+        "Methods, Reference computations and Structure relaxation",
+        "Results, Multiple low-energy structures"
+      ]
+    },
+    {
+      "id": "R1",
+      "category": "required",
+      "status": "partially_reported",
+      "summary": "Candidate pools, acquired labels, final ensembles, configurations, installation instructions, and code are archived, but no environment lockfile, split checksums, one-command figure rebuild, or complete determinism statement is identified.",
+      "source_locations": [
+        "Data availability",
+        "Code availability",
+        "DepositOnce DOI 10.14279/depositonce-21008",
+        "Zenodo DOI 10.5281/zenodo.13145078"
+      ],
+      "artifacts": [
+        "https://doi.org/10.14279/depositonce-21008",
+        "https://doi.org/10.5281/zenodo.13145078"
+      ]
+    },
+    {
+      "id": "CL1",
+      "category": "context_dependent",
+      "status": "reported",
+      "summary": "The acquisition score combines predicted energy and maximum force magnitude, while ensemble force uncertainty determines when each machine-learning relaxation is stopped. The per-cycle DFT batch varies from 100 to 200 structures; five models supply uncertainty; stopping tracks stabilisation of the k lowest-energy clusters over a stated number of cycles and energy tolerance; and total DFT counts and three simulations per composition are reported.",
+      "source_locations": [
+        "Main text, Collecting training data, Structure relaxation, and Stopping criterion",
+        "Results, Fig. 3 and Table 1",
+        "Code configuration, src/scripts/configs/main.yaml and experiment configurations",
+        "Supplementary Section B"
+      ]
+    },
+    {
+      "id": "C1",
+      "category": "context_dependent",
+      "status": "partially_reported",
+      "summary": "Runtime is separated into DFT labelling, ensemble training, machine-learning relaxation, and DFT validation; device allocations and the approximately 90% CPU-core-hour contribution from DFT labelling are stated, but energy and carbon estimates, candidates per GPU-hour, and associated uncertainty are not reported.",
+      "source_locations": [
+        "Supplementary Section B and Supplementary Fig. 2"
+      ]
+    },
+    {
+      "id": "GOV1",
+      "category": "context_dependent",
+      "status": "not_applicable",
+      "summary": "The workflow searches low-energy structures for three stated inorganic compositions and does not expose a hazardous target, autonomous execution pathway, or access mechanism that makes a governance control material to the claim. Data and code licences are assessed under D1 and R1.",
+      "source_locations": [
+        "Main article, Initial structure generation, Data availability, and Code availability"
+      ]
+    },
+    {
+      "id": "K1",
+      "category": "optional_summary",
+      "status": "partially_reported",
+      "summary": "DFT labels, per-cycle batch size, ensemble size, simulation replicates, validation relaxations, and device allocation are recoverable, but are not consolidated with full candidate attrition and compute in one record.",
+      "source_locations": [
+        "Results, Figs. 3-4",
+        "Supplementary Section B"
+      ]
+    }
+  ],
+  "notes": "This is a disclosure audit rather than a methodological quality score. No unreported detail was inferred."
+}

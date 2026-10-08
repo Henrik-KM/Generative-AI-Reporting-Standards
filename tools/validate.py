@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-"""Validate machine-readable reporting-checklist responses.
+"""Validate machine-readable records under the reporting protocol.
 
 This intentionally small validator checks completeness, allowed values, and basic
 types. It does not assess the scientific adequacy of a reported method or claim.
+Records with checklist_version 0.2.0 are checked with the archived validator in
+legacy/v0.2.0.
 """
 
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import sys
 from datetime import date
@@ -17,6 +20,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = ROOT / "schema" / "reporting-checklist.schema.json"
+LEGACY_DIR = ROOT / "legacy" / "v0.2.0"
 
 
 def load_json(path: Path) -> tuple[Any | None, list[str]]:
@@ -43,132 +47,165 @@ def validate_string_list(value: Any, location: str, errors: list[str], *, nonemp
             errors.append(f"{location}[{index}] must be a non-empty string")
 
 
+def validate_study(study: Any, schema: dict[str, Any], errors: list[str]) -> None:
+    study_schema = schema["$defs"]["study"]
+    if not isinstance(study, dict):
+        errors.append("study must be an object")
+        return
+    for field in study_schema["required"]:
+        if field not in study:
+            errors.append(f"study.{field} is required")
+    for field, value in study.items():
+        if field not in study_schema["properties"]:
+            errors.append(f"unknown study field '{field}'")
+        elif not nonempty_string(value):
+            errors.append(f"study.{field} must be a non-empty string")
+    record_date = study.get("record_date")
+    if nonempty_string(record_date):
+        try:
+            date.fromisoformat(record_date)
+        except ValueError:
+            errors.append("study.record_date must use YYYY-MM-DD")
+
+
+def validate_record_item(item: dict[str, Any], location: str, record_type: str,
+                         schema: dict[str, Any], errors: list[str]) -> None:
+    item_schema = schema["$defs"]["record_item"]
+    for field in item_schema["required"]:
+        if field not in item:
+            errors.append(f"{location}.{field} is required")
+    for field in item:
+        if field not in item_schema["properties"]:
+            errors.append(f"unknown field '{location}.{field}'")
+    answer = item.get("answer")
+    answers = set(item_schema["properties"]["answer"]["enum"])
+    if answer not in answers:
+        errors.append(f"{location}.answer must be one of {sorted(answers)}")
+    if record_type == "author_record":
+        if answer == "not_stated":
+            errors.append(f"{location}.answer 'not_stated' is only permitted in publication records")
+        if "not_stated" in item:
+            errors.append(f"{location}.not_stated is only permitted in publication records")
+    if not nonempty_string(item.get("entry")):
+        errors.append(f"{location}.entry must be a non-empty string")
+    if "not_stated" in item:
+        validate_string_list(item["not_stated"], f"{location}.not_stated", errors, nonempty=True)
+    # A not-applicable answer needs a reason in the entry, but not necessarily a source.
+    validate_string_list(
+        item.get("source_locations"),
+        f"{location}.source_locations",
+        errors,
+        nonempty=answer not in ("not_applicable", "not_stated"),
+    )
+
+
+def validate_audit_item(item: dict[str, Any], location: str,
+                        schema: dict[str, Any], errors: list[str]) -> None:
+    item_schema = schema["$defs"]["audit_item"]
+    for field in item_schema["required"]:
+        if field not in item:
+            errors.append(f"{location}.{field} is required")
+    for field in item:
+        if field not in item_schema["properties"]:
+            errors.append(f"unknown field '{location}.{field}'")
+    statuses = set(item_schema["properties"]["status"]["enum"])
+    if item.get("status") not in statuses:
+        errors.append(f"{location}.status must be one of {sorted(statuses)}")
+    if not nonempty_string(item.get("summary")):
+        errors.append(f"{location}.summary must be a non-empty string")
+    validate_string_list(item.get("source_locations"), f"{location}.source_locations", errors, nonempty=True)
+
+
+def validate_ledger(ledger: Any, schema: dict[str, Any], errors: list[str]) -> None:
+    row_schema = schema["$defs"]["ledger_row"]
+    if not isinstance(ledger, list):
+        errors.append("stage_ledger must be an array")
+        return
+    for index, row in enumerate(ledger):
+        location = f"stage_ledger[{index}]"
+        if not isinstance(row, dict):
+            errors.append(f"{location} must be an object")
+            continue
+        for field in row_schema["required"]:
+            if field not in row:
+                errors.append(f"{location}.{field} is required")
+        for field, value in row.items():
+            if field not in row_schema["properties"]:
+                errors.append(f"unknown field '{location}.{field}'")
+            elif field in ("n_in", "n_out", "evaluator_calls"):
+                if value is not None and (not isinstance(value, int) or isinstance(value, bool) or value < 0):
+                    errors.append(f"{location}.{field} must be a non-negative integer or null")
+            elif field in ("stage", "rule") and not nonempty_string(value):
+                errors.append(f"{location}.{field} must be a non-empty string")
+
+
 def validate_record(record: Any, schema: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if not isinstance(record, dict):
         return ["top-level value must be an object"]
 
-    top_required = schema["required"]
-    top_properties = schema["properties"]
-    for field in top_required:
+    for field in schema["required"]:
         if field not in record:
             errors.append(f"missing top-level field '{field}'")
     for field in record:
-        if field not in top_properties:
+        if field not in schema["properties"]:
             errors.append(f"unknown top-level field '{field}'")
 
-    if record.get("checklist_version") != top_properties["checklist_version"]["const"]:
-        errors.append(
-            "checklist_version must be "
-            f"'{top_properties['checklist_version']['const']}'"
-        )
-
-    record_types = set(top_properties["record_type"]["enum"])
+    record_types = set(schema["properties"]["record_type"]["enum"])
     record_type = record.get("record_type")
-    if not isinstance(record_type, str):
-        errors.append("record_type must be a string")
-    elif record_type not in record_types:
+    if record_type not in record_types:
         errors.append(f"record_type must be one of {sorted(record_types)}")
+        return errors
 
-    study = record.get("study")
-    study_schema = schema["$defs"]["study"]
-    if not isinstance(study, dict):
-        errors.append("study must be an object")
-    else:
-        for field in study_schema["required"]:
-            if field not in study:
-                errors.append(f"study.{field} is required")
-        for field, value in study.items():
-            if field not in study_schema["properties"]:
-                errors.append(f"unknown study field '{field}'")
-            elif not nonempty_string(value):
-                errors.append(f"study.{field} must be a non-empty string")
-        audit_date = study.get("audit_date")
-        if nonempty_string(audit_date):
-            try:
-                date.fromisoformat(audit_date)
-            except ValueError:
-                errors.append("study.audit_date must use YYYY-MM-DD")
+    validate_study(record.get("study"), schema, errors)
 
     items = record.get("items")
     if not isinstance(items, list):
         errors.append("items must be an array")
         return errors
 
-    item_schema = schema["$defs"]["item"]
-    allowed_ids = set(item_schema["properties"]["id"]["enum"])
-    allowed_statuses = set(item_schema["properties"]["status"]["enum"])
-    category_by_id = schema["x-category-by-id"]
-    required_record_ids = set(schema["x-required-record-ids"])
-    seen: set[str] = set()
-
+    allowed_ids = set(schema["$defs"]["item_id"]["enum"])
+    seen: list[str] = []
     for index, item in enumerate(items):
         location = f"items[{index}]"
         if not isinstance(item, dict):
             errors.append(f"{location} must be an object")
             continue
-        for field in item_schema["required"]:
-            if field not in item:
-                errors.append(f"{location}.{field} is required")
-        for field in item:
-            if field not in item_schema["properties"]:
-                errors.append(f"unknown field '{location}.{field}'")
-
         item_id = item.get("id")
-        if not isinstance(item_id, str):
-            errors.append(f"{location}.id must be a string")
-        elif item_id not in allowed_ids:
+        if item_id not in allowed_ids:
             errors.append(f"{location}.id must be one of {sorted(allowed_ids)}")
-        elif item_id in seen:
-            errors.append(f"duplicate checklist item '{item_id}'")
+            continue
+        if item_id in seen:
+            errors.append(f"duplicate item '{item_id}'")
+            continue
+        seen.append(item_id)
+        if record_type == "retrospective_audit":
+            validate_audit_item(item, location, schema, errors)
         else:
-            seen.add(item_id)
-            expected_category = category_by_id[item_id]
-            if item.get("category") != expected_category:
-                errors.append(
-                    f"{location}.category must be '{expected_category}' for {item_id}"
-                )
-            if item.get("status") == "not_applicable" and expected_category == "required":
-                errors.append(f"{location}.status cannot be not_applicable for required item {item_id}")
+            validate_record_item(item, location, record_type, schema, errors)
 
-        status = item.get("status")
-        if not isinstance(status, str):
-            errors.append(f"{location}.status must be a string")
-        elif status not in allowed_statuses:
-            errors.append(f"{location}.status must be one of {sorted(allowed_statuses)}")
-        if not nonempty_string(item.get("summary")):
-            errors.append(f"{location}.summary must be a non-empty string")
-        validate_string_list(
-            item.get("source_locations"),
-            f"{location}.source_locations",
-            errors,
-            nonempty=True,
-        )
-        if "artifacts" in item:
-            validate_string_list(
-                item["artifacts"], f"{location}.artifacts", errors, nonempty=False
-            )
-        if "notes" in item and not isinstance(item["notes"], str):
-            errors.append(f"{location}.notes must be a string")
-
-    missing = [item_id for item_id in schema["x-checklist-order"] if item_id in required_record_ids and item_id not in seen]
+    required = schema["x-required-ids-by-record-type"][record_type]
+    missing = [item_id for item_id in required if item_id not in seen]
     if missing:
-        errors.append(f"missing checklist items: {', '.join(missing)}")
-
-    order = [
-        item_id
-        for item in items
-        if isinstance(item, dict)
-        for item_id in [item.get("id")]
-        if isinstance(item_id, str) and item_id in allowed_ids
-    ]
+        errors.append(f"missing items: {', '.join(missing)}")
     expected_order = [item_id for item_id in schema["x-checklist-order"] if item_id in seen]
-    if order != expected_order:
-        errors.append("items must follow the canonical checklist order")
+    if seen != expected_order:
+        errors.append("items must follow the order of the eight steps")
 
+    if "stage_ledger" in record:
+        validate_ledger(record["stage_ledger"], schema, errors)
     if "notes" in record and not isinstance(record["notes"], str):
         errors.append("notes must be a string")
     return errors
+
+
+def legacy_validator():
+    """Load the archived version 0.2.0 validator and its schema."""
+    spec = importlib.util.spec_from_file_location("legacy_validate", LEGACY_DIR / "tools" / "validate.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    schema, errors = load_json(LEGACY_DIR / "schema" / "reporting-checklist.schema.json")
+    return module, schema, errors
 
 
 def discover_json_files(paths: list[Path]) -> list[Path]:
@@ -183,13 +220,13 @@ def discover_json_files(paths: list[Path]) -> list[Path]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Check reporting-checklist JSON files for completeness and basic types."
+        description="Check reporting-protocol JSON records for completeness and basic types."
     )
     parser.add_argument("paths", nargs="+", type=Path, help="JSON file or directory")
     args = parser.parse_args()
 
-    schema_data, schema_errors = load_json(SCHEMA_PATH)
-    if schema_errors or not isinstance(schema_data, dict):
+    schema, schema_errors = load_json(SCHEMA_PATH)
+    if schema_errors or not isinstance(schema, dict):
         for error in schema_errors or ["schema must contain a JSON object"]:
             print(f"ERROR {SCHEMA_PATH}: {error}", file=sys.stderr)
         return 2
@@ -201,8 +238,16 @@ def main() -> int:
 
     failed = 0
     for path in files:
-        record, parse_errors = load_json(path)
-        errors = parse_errors or validate_record(record, schema_data)
+        record, errors = load_json(path)
+        if not errors:
+            version = record.get("checklist_version") if isinstance(record, dict) else None
+            if version == schema["properties"]["checklist_version"]["const"]:
+                errors = validate_record(record, schema)
+            elif version == "0.2.0":
+                module, legacy_schema, legacy_errors = legacy_validator()
+                errors = legacy_errors or module.validate_record(record, legacy_schema)
+            else:
+                errors = [f"unsupported checklist_version {version!r}"]
         if errors:
             failed += 1
             print(f"FAIL {path}")

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "reporting-checklist.schema.json",
-  "title": "Generative materials design reporting checklist response",
-  "description": "A machine-readable author response or retrospective disclosure audit. The schema records reporting completeness and does not assess scientific quality.",
+  "title": "Reporting protocol for generative materials design, version 1.0.0",
+  "description": "A machine-readable record of a generative materials-design study under the eight-step reporting protocol. Author records and records completed from a publication give the choice or value used for each item; retrospective audits give a disclosure state. The schema records what was reported and does not assess scientific quality.",
   "type": "object",
   "required": [
     "checklist_version",
@@ -14,25 +14,40 @@
   "properties": {
     "checklist_version": {
       "type": "string",
-      "const": "0.2.0"
+      "const": "1.0.0"
     },
     "record_type": {
       "type": "string",
       "enum": [
-        "author_response",
+        "author_record",
+        "publication_record",
         "retrospective_audit"
-      ]
+      ],
+      "description": "author_record: completed by the authors of the study. publication_record: completed from the publication and its Supplementary Information by anyone, including the authors. retrospective_audit: disclosure states assigned by a reader or reviewer."
     },
     "study": {
       "$ref": "#/$defs/study"
     },
     "items": {
       "type": "array",
-      "description": "Include all required and context-dependent identifiers. K1 is optional.",
-      "minItems": 12,
-      "maxItems": 13,
+      "minItems": 13,
+      "maxItems": 15,
       "items": {
-        "$ref": "#/$defs/item"
+        "oneOf": [
+          {
+            "$ref": "#/$defs/record_item"
+          },
+          {
+            "$ref": "#/$defs/audit_item"
+          }
+        ]
+      }
+    },
+    "stage_ledger": {
+      "type": "array",
+      "description": "Optional structured stage ledger. Counts are integers, or null when not stated.",
+      "items": {
+        "$ref": "#/$defs/ledger_row"
       }
     },
     "notes": {
@@ -70,17 +85,63 @@
           "type": "string",
           "minLength": 1
         },
-        "audit_date": {
+        "record_date": {
           "type": "string",
           "format": "date"
         }
       }
     },
-    "item": {
+    "record_item": {
       "type": "object",
       "required": [
         "id",
-        "category",
+        "answer",
+        "entry",
+        "source_locations"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/item_id"
+        },
+        "answer": {
+          "type": "string",
+          "enum": [
+            "value",
+            "not_applicable",
+            "not_performed",
+            "not_stated"
+          ],
+          "description": "not_stated is permitted only in publication records."
+        },
+        "entry": {
+          "type": "string",
+          "minLength": 1
+        },
+        "not_stated": {
+          "type": "array",
+          "description": "Elements of the item that the publication does not state; publication records only.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source_locations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "audit_item": {
+      "type": "object",
+      "required": [
+        "id",
         "status",
         "summary",
         "source_locations"
@@ -88,30 +149,7 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "type": "string",
-          "enum": [
-            "D1",
-            "S1",
-            "M1",
-            "T1",
-            "G1",
-            "E1",
-            "B1",
-            "F1",
-            "R1",
-            "CL1",
-            "C1",
-            "GOV1",
-            "K1"
-          ]
-        },
-        "category": {
-          "type": "string",
-          "enum": [
-            "required",
-            "context_dependent",
-            "optional_summary"
-          ]
+          "$ref": "#/$defs/item_id"
         },
         "status": {
           "type": "string",
@@ -134,61 +172,183 @@
             "minLength": 1
           }
         },
-        "artifacts": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
         "notes": {
           "type": "string"
         }
       }
+    },
+    "ledger_row": {
+      "type": "object",
+      "required": [
+        "stage",
+        "rule",
+        "n_in",
+        "n_out",
+        "evaluator_calls"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n_in": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "n_out": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "evaluator_calls": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "cost_per_call": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "per_cycle": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "item_id": {
+      "type": "string",
+      "enum": [
+        "claim",
+        "stage_ledger",
+        "data",
+        "splits",
+        "model",
+        "training",
+        "generation",
+        "evaluation",
+        "feasibility",
+        "baselines",
+        "closed_loop",
+        "reproducibility",
+        "compute",
+        "governance",
+        "key_numbers"
+      ]
     }
   },
   "x-checklist-order": [
-    "D1",
-    "S1",
-    "M1",
-    "T1",
-    "G1",
-    "E1",
-    "B1",
-    "F1",
-    "R1",
-    "CL1",
-    "C1",
-    "GOV1",
-    "K1"
+    "claim",
+    "stage_ledger",
+    "data",
+    "splits",
+    "model",
+    "training",
+    "generation",
+    "evaluation",
+    "feasibility",
+    "baselines",
+    "closed_loop",
+    "reproducibility",
+    "compute",
+    "governance",
+    "key_numbers"
   ],
-  "x-required-record-ids": [
-    "D1",
-    "S1",
-    "M1",
-    "T1",
-    "G1",
-    "E1",
-    "B1",
-    "F1",
-    "R1",
-    "CL1",
-    "C1",
-    "GOV1"
-  ],
+  "x-step-by-id": {
+    "claim": 1,
+    "stage_ledger": 2,
+    "data": 3,
+    "splits": 3,
+    "model": 4,
+    "training": 4,
+    "generation": 4,
+    "evaluation": 5,
+    "feasibility": 5,
+    "baselines": 6,
+    "closed_loop": 7,
+    "reproducibility": 7,
+    "compute": 7,
+    "governance": 7,
+    "key_numbers": 8
+  },
   "x-category-by-id": {
-    "D1": "required",
-    "S1": "required",
-    "M1": "required",
-    "T1": "required",
-    "G1": "required",
-    "E1": "required",
-    "B1": "required",
-    "F1": "required",
-    "R1": "required",
-    "CL1": "context_dependent",
-    "C1": "context_dependent",
-    "GOV1": "context_dependent",
-    "K1": "optional_summary"
+    "claim": "required",
+    "stage_ledger": "required",
+    "data": "required",
+    "splits": "required",
+    "model": "required",
+    "training": "required",
+    "generation": "required",
+    "evaluation": "required",
+    "feasibility": "required",
+    "baselines": "required",
+    "closed_loop": "if_applicable",
+    "reproducibility": "required",
+    "compute": "if_applicable",
+    "governance": "if_applicable",
+    "key_numbers": "required"
+  },
+  "x-required-ids-by-record-type": {
+    "author_record": [
+      "claim",
+      "stage_ledger",
+      "data",
+      "splits",
+      "model",
+      "training",
+      "generation",
+      "evaluation",
+      "feasibility",
+      "baselines",
+      "closed_loop",
+      "reproducibility",
+      "compute",
+      "governance",
+      "key_numbers"
+    ],
+    "publication_record": [
+      "claim",
+      "stage_ledger",
+      "data",
+      "splits",
+      "model",
+      "training",
+      "generation",
+      "evaluation",
+      "feasibility",
+      "baselines",
+      "closed_loop",
+      "reproducibility",
+      "compute",
+      "governance",
+      "key_numbers"
+    ],
+    "retrospective_audit": [
+      "data",
+      "splits",
+      "model",
+      "training",
+      "generation",
+      "evaluation",
+      "feasibility",
+      "baselines",
+      "closed_loop",
+      "reproducibility",
+      "compute",
+      "governance",
+      "key_numbers"
+    ]
   }
 }

@@ -1,0 +1,278 @@
+{
+  "checklist_version": "1.0.0",
+  "record_type": "publication_record",
+  "study": {
+    "title": "Data-efficient design of high-entropy oxygen carriers for chemical looping using active learning",
+    "citation": "Brorsson et al., ACS Materials Au 6, 319-326 (2026); companion account Brorsson et al., Materials Today Energy 57, 102239 (2026); preprint Brorsson et al., METAL preprint, arXiv:2601.03933.",
+    "doi": "10.1021/acsmaterialsau.5c00230",
+    "workflow_type": "Closed-loop active learning: WAE-GMM composition generation, Gaussian-process surrogate, Thompson sampling, CHGNet thermodynamic evaluation",
+    "assessment_scope": "Completed from the two publications, their Supporting Information, and the preprint of the companion account only. The record covers the oxygen-transfer-capacity campaign; locations in the companion account refer to the preprint numbering.",
+    "record_date": "2026-10-08"
+  },
+  "items": [
+    {
+      "id": "claim",
+      "answer": "value",
+      "entry": "Active learning with a generative composition model identifies ABO3 perovskites with high configurational entropy and high calculated oxygen transfer capacity (OTC) between reducing (1050 °C, pO2 = 1e-14 atm) and oxidising (950 °C, pO2 = 0.2 atm) conditions. Evidence level: thermodynamics computed with CHGNet; no DFT validation and no synthesis. Comparison: Thompson sampling relative to random and greedy acquisition, and the final candidates relative to the initial pool.",
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), pp. 322-324",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Sec. III"
+      ]
+    },
+    {
+      "id": "stage_ledger",
+      "answer": "value",
+      "entry": "Given in stage_ledger below; the per-cycle and campaign counts are not stated in the publications.",
+      "not_stated": [
+        "proposals, screened candidates, and evaluated candidates per cycle",
+        "total number of evaluated candidates",
+        "cost per evaluation"
+      ],
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), pp. 322-324",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Secs. II-III"
+      ]
+    },
+    {
+      "id": "data",
+      "answer": "value",
+      "entry": "No external labelled dataset is used. The initial pool consists of 1,815 randomly generated compositions in 80-atom ABO3 supercells with up to seven metallic elements (A site: Ca, Ba, K, La, Sm, Sr, Y; B site: Co, Cu, Fe, Mn, Mg, Ni, Ti), of which 1,066 satisfy charge neutrality and a Bartel tolerance factor of at most 4.18 and are labelled with CHGNet. Results are reported after removal of duplicate entries.",
+      "not_stated": [
+        "duplicate-matching rule",
+        "dataset licence and public deposit"
+      ],
+      "source_locations": [
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Sec. II.A",
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), pp. 323-324"
+      ]
+    },
+    {
+      "id": "splits",
+      "answer": "not_applicable",
+      "entry": "No train-test partition: the models are retrained on the growing database of labelled compositions in every cycle, and the claim concerns the candidates found rather than surrogate accuracy. Gaussian-process hyperparameters are fitted by maximising the marginal likelihood.",
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), p. 322",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Secs. II.B-II.C"
+      ]
+    },
+    {
+      "id": "model",
+      "answer": "value",
+      "entry": "Two normalised seven-dimensional vectors of A- and B-site occupations. WAE: encoder 80-64-48 with layer normalisation, ReLU, and 10% dropout in the first hidden layer; eight-dimensional latent space; composition decoder 48-64-80 with a softmax per sublattice; property decoder 192-256-320; L1 reconstruction loss and a maximum-mean-discrepancy penalty against a Gaussian prior with a weight in [0, 1]. GMM fitted to the latent encodings. GP: GPyTorch, Matérn kernel with one length scale per input dimension and an output scale, operating on the composition vectors. Different random seeds for the parallel runs.",
+      "not_stated": [
+        "value of the MMD weight",
+        "number of GMM components and covariance type",
+        "Matérn smoothness parameter",
+        "random seed values"
+      ],
+      "source_locations": [
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Secs. II.B-II.C",
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), SI Fig. S2 and Note S1"
+      ]
+    },
+    {
+      "id": "training",
+      "answer": "value",
+      "entry": "GP hyperparameters are optimised with Adam on the negative marginal log-likelihood.",
+      "not_stated": [
+        "WAE optimiser, learning rate, epochs, and batch size",
+        "whether models are retrained from scratch in each cycle",
+        "numerical precision",
+        "hardware",
+        "training time"
+      ],
+      "source_locations": [
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Sec. II.C.1"
+      ]
+    },
+    {
+      "id": "generation",
+      "answer": "value",
+      "entry": "In every cycle, latent points are sampled from the GMM, decoded to compositions, filtered for charge neutrality, a tolerance factor of at most 4.18, and configurational entropy of at least 1.5R, and passed to acquisition.",
+      "not_stated": [
+        "number of samples per cycle",
+        "rounding of fractional compositions to site occupations",
+        "handling of duplicate proposals",
+        "pass rates",
+        "inference throughput"
+      ],
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), p. 321 and SI Note S1",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Secs. II.A.2 and II.B.3"
+      ]
+    },
+    {
+      "id": "evaluation",
+      "answer": "value",
+      "entry": "Task success is the OTC, 0.5 Δδ M(O2)/M, with the non-stoichiometry limited to δ ≤ 0.5. All 20 OTC values reported for the top-ranked candidates are reproduced with Δδ = 0.5, the maximum permitted, so that their ranking is set by molar mass; the values are reproduced with the molar mass of the reduced phase, whereas the published expression refers to that of ABO3. Novelty: compositions are compared with previously labelled entries.",
+      "not_stated": [
+        "novelty matching rule",
+        "agreement between GP predictions and CHGNet values of acquired candidates",
+        "spread of the outcome across parallel runs"
+      ],
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), pp. 321 and 324",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Table IV"
+      ]
+    },
+    {
+      "id": "feasibility",
+      "answer": "value",
+      "entry": "Chemical validity: charge neutrality and perovskite formability (tolerance factor ≤ 4.18). Thermodynamic stability: CHGNet relaxation (ASE BFGS, forces below 0.001 eV/Å) of 19 special quasirandom structures per composition across cubic, orthorhombic, and brownmillerite configurations, δ from 0 to 0.5 in steps of 0.0625; formation energies relative to a Materials Project phase diagram without Materials Project corrections, cross-checked against M3GNet; energy above hull is not used as a criterion. Dynamical stability: harmonic phonons (phonopy, 0.02 Å displacements, supercells of at least 12.5 Å) computed for the vibrational free energy. Synthesis and experiment: not performed; the candidates are computational nominations at the CHGNet evidence level.",
+      "not_stated": [
+        "whether the reported candidates show imaginary phonon modes"
+      ],
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), p. 324 and SI Fig. S3",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Sec. III.A"
+      ]
+    },
+    {
+      "id": "baselines",
+      "answer": "value",
+      "entry": "Thompson sampling is compared with random selection in the dry-reforming proof of concept and with greedy selection in this campaign, using the same generator, filters, and evaluator. Not reported: a random or enumerative search of the same composition space at the same number of CHGNet evaluations, and an ablation of the generative model. Consequence: the published record supports improvement of OTC relative to the initial pool, but not superiority over simpler search strategies.",
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), Fig. 2",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Sec. III"
+      ]
+    },
+    {
+      "id": "closed_loop",
+      "answer": "value",
+      "entry": "Thompson sampling from the GP predictive distribution with n candidates per cycle, where n is the number of parallel evaluations; UQ by GP predictive variance; parallel runs of 10 cycles from the same initial pool with different seeds, merged and continued for 40 cycles; a fixed number of cycles as stopping rule. The Letter describes five parallel runs, the companion account ten.",
+      "not_stated": [
+        "value of n",
+        "total number of evaluations"
+      ],
+      "source_locations": [
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Sec. II.C.2",
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), p. 323",
+        "Brorsson et al., Materials Today Energy 57, 102239 (2026), Fig. 6 and Sec. 3.3"
+      ]
+    },
+    {
+      "id": "reproducibility",
+      "answer": "value",
+      "entry": "The software used is named (CHGNet, ASE, phonopy, GPyTorch, pymatgen, M3GNet). No public repository or data deposit is identified in the publications, which refer to the companion account for the methodology.",
+      "not_stated": [
+        "software versions",
+        "code and data deposit",
+        "environment and rebuild command"
+      ],
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), Data Availability Statement"
+      ]
+    },
+    {
+      "id": "compute",
+      "answer": "value",
+      "entry": "Calculations used national supercomputing resources.",
+      "not_stated": [
+        "cost per evaluation and in total"
+      ],
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), Acknowledgements",
+        "Brorsson et al., Materials Today Energy 57, 102239 (2026), Acknowledgements"
+      ]
+    },
+    {
+      "id": "governance",
+      "answer": "not_applicable",
+      "entry": "Oxide oxygen carriers for energy applications; no hazardous target, autonomous execution pathway, or access restriction.",
+      "source_locations": []
+    },
+    {
+      "id": "key_numbers",
+      "answer": "value",
+      "entry": "1,815 random compositions, of which 1,066 passed the chemistry screen and were labelled with CHGNet; parallel runs of 10 cycles, merged and continued for 40 cycles; 20 candidates reported at the CHGNet evidence level, with the highest OTC of 0.057 g(O2)/g(OC) for Ca13CoMgMn9Ti5Y3O48. The number of candidates evaluated per cycle and in total is not stated, so the outcome cannot be expressed per evaluation.",
+      "not_stated": [
+        "candidates evaluated per cycle and in total"
+      ],
+      "source_locations": [
+        "Brorsson et al., ACS Materials Au 6, 319-326 (2026), pp. 323-324",
+        "Brorsson et al., METAL preprint, arXiv:2601.03933, Table IV"
+      ]
+    }
+  ],
+  "stage_ledger": [
+    {
+      "stage": "Initial pool",
+      "rule": "Random compositions with up to seven metals",
+      "n_in": null,
+      "n_out": 1815,
+      "evaluator_calls": null,
+      "per_cycle": false,
+      "source": "Brorsson et al., ACS Materials Au 6, 319-326 (2026), p. 323"
+    },
+    {
+      "stage": "Chemistry screen",
+      "rule": "Charge neutrality; tolerance factor <= 4.18",
+      "n_in": 1815,
+      "n_out": 1066,
+      "evaluator_calls": null,
+      "per_cycle": false,
+      "source": "Brorsson et al., ACS Materials Au 6, 319-326 (2026), p. 324"
+    },
+    {
+      "stage": "Initial labelling",
+      "rule": "CHGNet relaxation of 19 SQSs per composition, phonons, OTC",
+      "n_in": 1066,
+      "n_out": 1066,
+      "evaluator_calls": 1066,
+      "cost_per_call": null,
+      "per_cycle": false,
+      "source": "Brorsson et al., ACS Materials Au 6, 319-326 (2026), p. 324"
+    },
+    {
+      "stage": "Proposal",
+      "rule": "WAE-GMM sampling and decoding",
+      "n_in": null,
+      "n_out": null,
+      "evaluator_calls": null,
+      "per_cycle": true
+    },
+    {
+      "stage": "Screen",
+      "rule": "Charge neutrality; tolerance factor <= 4.18; Sconf >= 1.5R",
+      "n_in": null,
+      "n_out": null,
+      "evaluator_calls": null,
+      "per_cycle": true
+    },
+    {
+      "stage": "Acquisition",
+      "rule": "GP and Thompson sampling",
+      "n_in": null,
+      "n_out": null,
+      "evaluator_calls": null,
+      "per_cycle": true
+    },
+    {
+      "stage": "Evaluation",
+      "rule": "As initial labelling",
+      "n_in": null,
+      "n_out": null,
+      "evaluator_calls": null,
+      "cost_per_call": null,
+      "per_cycle": true
+    },
+    {
+      "stage": "Campaign total",
+      "rule": "Parallel runs of 10 cycles, merged and continued for 40 cycles",
+      "n_in": null,
+      "n_out": null,
+      "evaluator_calls": null,
+      "per_cycle": false
+    },
+    {
+      "stage": "Outcome",
+      "rule": "Ranked by OTC at the CHGNet evidence level",
+      "n_in": null,
+      "n_out": 20,
+      "evaluator_calls": null,
+      "per_cycle": false,
+      "source": "Brorsson et al., METAL preprint, arXiv:2601.03933, Table IV"
+    }
+  ],
+  "notes": "Null counts are not stated in the publications. Minor discrepancies between the two publications (number of parallel runs; wording of the entropy criterion on p. 323 of the Letter) are noted in Supplementary Note 1 of the accompanying article."
+}
