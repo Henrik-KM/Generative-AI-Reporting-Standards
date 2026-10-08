@@ -1,0 +1,158 @@
+{
+  "checklist_version": "1.0.0-draft",
+  "record_type": "author_response",
+  "study": {
+    "title": "Data-Efficient Design of High-Entropy Oxygen Carriers for Chemical Looping Using Active Learning",
+    "citation": "Brorsson J et al. ACS Materials Au 6, 319-326 (2026), with the separately identified METAL companion methods account, arXiv:2601.03933.",
+    "doi": "10.1021/acsmaterialsau.5c00230",
+    "workflow_type": "WAE/GMM composition generation with Gaussian-process uncertainty, Thompson acquisition and CHGNet-based oxygen-carrier thermodynamic evaluation",
+    "assessment_scope": "Author-format reconstruction from the ACS publication, separately attributed companion methods account and verified GitLab cycle-zero database. Initial-cohort quantities are distinguished from acquired proposals. This is complete category coverage, not complete campaign provenance; unavailable records are not replaced with defaults or inferred values.",
+    "audit_date": "2026-10-08"
+  },
+  "items": [
+    {
+      "id": "D1", "category": "required", "status": "partially_reported",
+      "summary": "The recovered initial high-entropy oxygen-carrier database contains 1815 cycle-zero configurations, of which 1066 pass the recorded charge-neutrality and Bartel-tolerance screen and 749 are filtered. Its tab-separated export contains the same 1066 retained compositions and target values. The separate dry-reforming illustration starts from approximately 240 entries in a 2401-composition dataset; these populations are not added together. Dataset licence and cross-partition leakage evidence remain unavailable.",
+      "source_locations": ["ACS Materials Au pp. 322-324", "GitLab oxygen-carrier-discovery snapshot 319f33e1199026e54638a5fd959cea0a3d474f5e, heoc/wang/training.db.gz and data/complete_unformatted_leaderboard.csv", "genAI-review/npj/data/oxygen_archive/initial_archive_verification.json"],
+      "details": {
+        "initial_cohort": {"status": "reported", "value": {"scope": "initial high-entropy oxygen-carrier cohort, cycle zero", "initial": 1815, "retained": 1066, "filtered": 749, "retained_with_otc": 1066}, "source_locations": ["Recovered ASE SQLite systems table and filtered/otc metadata", "ACS Materials Au p. 324, Structure Generation and Filtering"]},
+        "initial_manifest_and_exact_duplicates": {"status": "reported", "value": "The exported initial_candidate_manifest.csv supplies all 1815 archive identifiers, exact elemental-count composition keys, filtering decisions, Bartel tolerance, entropy and available OTC. Identifiers and exact compositions are unique within this initial cohort. This is not a cross-partition collision audit or a later proposal manifest.", "source_locations": ["genAI-review/npj/data/oxygen_archive/initial_candidate_manifest.csv", "genAI-review/npj/tools/verify_oxygen_archive.py; archive verification JSON"]},
+        "separate_initialisation": {"status": "reported", "value": "For the dry-reforming illustration, approximately 10% of the 2401-composition source dataset is selected, yielding approximately 240 starting entries. This is a different initialisation, not a train-test split. The published chemistry screen retains 2069 of 2401 source compositions before that campaign.", "source_locations": ["ACS Materials Au pp. 322-324, dry-reforming illustration and Structure Generation and Filtering"]},
+        "duplicate_rule_and_collision_rate": {"status": "not_reported", "value": null, "rationale": "Exact matching tolerances, the composition manifest and a cross-partition collision audit are not recovered from the available evidence."},
+        "shortcut_check": {"status": "not_reported", "value": null, "rationale": "No archived result of a claim-specific shortcut diagnostic has been verified; absence of reporting is not treated as non-performance."},
+        "perturbation_check": {"status": "not_reported", "value": null, "rationale": "The result and protocol of a robustness or label-permutation check have not been verified."},
+        "dataset_licence": {"status": "not_reported", "value": null, "rationale": "The initial data and hashes were recovered through authenticated GitLab access. Public dataset access and an underlying dataset licence were not established; the article licence is not substituted for them."}
+      }
+    },
+    {
+      "id": "S1", "category": "required", "status": "partially_reported",
+      "summary": "The workflow updates its training database after candidate evaluation. Initial sampling, acquired training data, model-selection partitions and held-out evaluation must be reported separately. The approximately 10% initialisation is not evidence of a 10/90 train-test split. Exact split manifests and model-selection records have not been recovered.",
+      "source_locations": ["ACS Materials Au main text, active-learning description", "METAL Section II and Section III"],
+      "details": {
+        "acquired_data_use": {"status": "reported", "value": "Evaluated compositions and updated target values are added to the database for the subsequent active-learning cycle.", "source_locations": ["ACS Materials Au Fig. 1c and main text", "METAL Fig. 1"]},
+        "model_selection_and_test_partitions": {"status": "not_reported", "value": null, "rationale": "No verified run-level partition, grouping rule, checkpoint-selection record or independent held-out test manifest is available. An online acquisition trajectory does not by itself establish held-out predictive generalisation."}
+      }
+    },
+    {
+      "id": "M1", "category": "required", "status": "partially_reported",
+      "summary": "The proposal model uses perovskite sublattice composition fractions and a target property. The companion methods account specifies an eight-dimensional WAE latent representation, an 80/64/48 encoder, a 48/64/80 composition decoder, and a 192/256/320 property decoder. A GMM is fitted to the latent encoding; Gaussian processes provide uncertainty for Thompson acquisition. These published architectural values are distinct from unverified run-specific hyperparameters.",
+      "source_locations": ["ACS Materials Au Fig. 1c and Method", "METAL Sections II.B.1-II.C.1"],
+      "details": {
+        "representation": {"status": "reported", "value": "Two seven-dimensional vectors of fractional A- and B-sublattice occupations in ABO3, together with the selected scalar target property.", "source_locations": ["METAL Section II.B.1"]},
+        "architecture": {"status": "reported", "value": {"latent_dimensions": 8, "encoder_hidden": [80, 64, 48], "composition_decoder_hidden": [48, 64, 80], "property_decoder_hidden": [192, 256, 320], "encoder_dropout": 0.1, "other_components": "Layer normalisation and ReLU; sublattice-wise softmax in the composition decoder; fitted latent GMM"}, "source_locations": ["METAL Section II.B.1-II.B.3"]},
+        "loss_definition": {"status": "reported", "value": "L1 reconstruction with a maximum-mean-discrepancy penalty against an isotropic Gaussian prior. The actual regularisation coefficient is not recovered.", "source_locations": ["METAL Section II.B.2"]},
+        "gp_surrogate": {"status": "reported", "value": "The companion account describes GPyTorch Gaussian processes using composition vectors directly, a scaled Matern kernel with individual length scales, and Adam optimisation of negative marginal log likelihood. Learned kernel parameters and their run mapping are not supplied by this description.", "source_locations": ["METAL Section II.C.1, Surrogate models"]},
+        "run_specific_hyperparameters": {"status": "not_reported", "value": null, "rationale": "The actual regularisation coefficient, GMM component count, GP kernel settings and checkpoint identifiers still need the run archive; code defaults are not evidence of their use."},
+        "random_seeds": {"status": "not_reported", "value": null, "rationale": "Exact seeds and a mapping from seeds to runs are not recovered. Discussion of multiple seeded runs does not supply the seed values."}
+      }
+    },
+    {
+      "id": "T1", "category": "required", "status": "partially_reported",
+      "summary": "WAE and surrogate updates are part of the acquisition loop; CHGNet supplies an external pretrained interatomic potential. The record distinguishes training the proposal/surrogate components from applying the pretrained evaluator. Exact optimisation schedules, steps, batch sizes, precision, devices and training times require the run-level configuration.",
+      "source_locations": ["ACS Materials Au main text and Method", "METAL Sections II.B-II.C and II.A.3"],
+      "details": {
+        "trained_and_frozen_components": {"status": "reported", "value": "The WAE/GMM and surrogate are used in iterative model updating; CHGNet is applied as an externally pretrained potential, not claimed to have been trained from scratch in this study.", "source_locations": ["ACS Materials Au Fig. 1c and main text", "METAL Sections II.A.3-II.C"]},
+        "gp_optimisation_method": {"status": "reported", "value": "Adam optimisation of negative marginal log likelihood for GP hyperparameters is described in the companion account; this does not supply exact learning rates, steps or learned settings.", "source_locations": ["METAL Section II.C.1"]},
+        "optimiser_schedule_epochs_batch_precision": {"status": "not_reported", "value": null, "rationale": "The complete WAE/GP run configuration, optimiser settings, schedules, steps, batch size and precision have not been recovered; a named GP optimiser alone does not establish these values."},
+        "training_hardware_and_time": {"status": "not_reported", "value": null, "rationale": "Exact devices, counts and measured training time are not recoverable from the available run evidence."}
+      }
+    },
+    {
+      "id": "G1", "category": "required", "status": "partially_reported",
+      "summary": "A WAE/GMM generates composition proposals and acquisition prioritises candidates for evaluation. The recovered cycle-zero archive verifies the 1815/1066 chemistry screen, separately from acquisition. Later cumulative attempts, unique proposals, repairs, rejections and inference throughput remain unavailable. Entropy-filter statements in the publications are kept separate from the directly verified initial-cohort rule.",
+      "source_locations": ["ACS Materials Au Fig. 1c and Method", "METAL Sections II.A.2-II.C.2"],
+      "details": {
+        "sampler_and_conditioning": {"status": "reported", "value": "Latent-space WAE/GMM composition sampling combined with Gaussian-process prediction and Thompson acquisition for the selected oxygen-carrier property.", "source_locations": ["ACS Materials Au Fig. 1c and Method, Active Learning", "METAL Sections II.B.3-II.C.2"]},
+        "scope_of_filters": {"status": "reported", "value": "All 1815 archive flags exactly match rejection on failed charge neutrality or Bartel tolerance > 4.18. Of the 1066 retained entries, 815 have Sconf/R < 1.5, so this initial screen is not an entropy >= 1.5R screen. The ACS Results narrative mentions low-entropy filtering, whereas its Methods and the recovered initial database support the charge/tolerance rule. The companion's acquisition-stage entropy condition is separately attributed, not inferred for every historical run.", "source_locations": ["ACS Materials Au pp. 323-324", "METAL Section II.A.2", "GitLab heoc/pyscripts/create_crystal_space.py, filters_list", "genAI-review/npj/data/oxygen_archive/initial_archive_verification.json"]},
+        "cumulative_attempts_and_unique_candidates": {"status": "not_reported", "value": null, "rationale": "Campaign-level proposal and unique-candidate manifests have not been recovered. The initial 1815 entries are a preparation population, not N_gen for the later campaign."},
+        "repair_rejection_and_failure_counts": {"status": "not_reported", "value": null, "rationale": "Filtering criteria are described, but an event-level record of repairs, attempted proposals and failures is not yet available."},
+        "inference_throughput": {"status": "not_reported", "value": null, "rationale": "No matched measurement on identified hardware is recovered; this quantity belongs to generation rather than training."}
+      }
+    },
+    {
+      "id": "E1", "category": "required", "status": "partially_reported",
+      "summary": "The study targets calculated oxygen-transfer behaviour or process suitability based on thermodynamic evaluation. Its outcome is computational screening, not a newly synthesised material. Novelty, uniqueness, stochastic uncertainty and evaluator-call denominators require explicit records before a general discovery-efficiency claim can be quantified.",
+      "source_locations": ["ACS Materials Au Method and results", "METAL Sections II.D and III"],
+      "details": {
+        "endpoint": {"status": "reported", "value": "CHGNet-based thermodynamic assessment of oxygen-carrier compositions, with oxygen-transfer capacity or process-suitability probability as the target. This is not a prospective synthesis endpoint.", "source_locations": ["ACS Materials Au main text, evaluation paragraph", "METAL Sections II.D and III"]},
+        "metric_scope": {"status": "reported", "value": "Initial screening retention is 1066/1815 = 58.7% after rounding. This derived preparation-cohort rate does not quantify cumulative discovery yield or evaluator efficiency.", "source_locations": ["Published 1815 and 1066 initial-cohort counts; arithmetic documented in manuscript figure inputs"]},
+        "novelty_rule_and_stochastic_intervals": {"status": "not_reported", "value": null, "rationale": "An exact novelty reference, matching rule and campaign-level independent-run intervals have not been reconstructed. Within-run or pooled trajectory variation is not labelled an independent-run confidence interval."}
+      }
+    },
+    {
+      "id": "B1", "category": "required", "status": "partially_reported",
+      "summary": "The companion account compares acquisition and uncertainty strategies, including random, exploratory, greedy and Thompson choices and GP versus MC-dropout uncertainty. This tests search control under the stated application, rather than establishing superiority over all generator families. The matched cumulative evaluator budget and a generator-component ablation still need verification.",
+      "source_locations": ["ACS Materials Au results and Fig. 2", "METAL Sections II.C and III"],
+      "details": {
+        "comparison_methods": {"status": "reported", "value": "Random, exploration, greedy and Thompson acquisition choices; Gaussian-process and MC-dropout uncertainty variants are discussed in the companion account.", "source_locations": ["METAL Sections II.C and III, acquisition comparisons"]},
+        "budget_matching": {"status": "not_reported", "value": null, "rationale": "The event-level evaluator counts and identical-budget accounting needed to quantify efficiency differences have not been recovered."},
+        "generator_ablation": {"status": "not_reported", "value": null, "rationale": "A verified ablation isolating the generative component has not been identified; acquisition comparisons are not substituted for it."}
+      }
+    },
+    {
+      "id": "F1", "category": "required", "status": "partially_reported",
+      "summary": "The record distinguishes charge and tolerance filtering from CHGNet relaxation and thermodynamic targets. The companion account specifies BFGS relaxation until forces are below 0.001 eV/angstrom, and phonon calculations for vibrational thermodynamics. Those calculations are not silently reinterpreted as a reported dynamical-stability pass criterion. New prospective synthesis and independent DFT confirmation of all acquired candidates were not the evaluator used.",
+      "source_locations": ["ACS Materials Au main text, evaluator choice", "METAL Sections II.A.2-II.A.3 and II.D"],
+      "details": {
+        "relaxation": {"status": "reported", "value": "CHGNet interatomic-potential evaluation with ASE BFGS relaxation to a force threshold below 0.001 eV/angstrom in the companion account.", "source_locations": ["METAL Section II.A.3"]},
+        "vibrational_thermodynamics": {"status": "reported", "value": "The ACS Methods specify harmonic PhonoPy calculations with 0.02 angstrom displacements, supercells at least 12.5 angstrom along each axis, and reciprocal-grid density 1000000 atom^-1. These estimate vibrational thermodynamic contributions, not a separately verified dynamical-stability acceptance count.", "source_locations": ["ACS Materials Au p. 324, Property Estimates", "METAL Section II.A.3"]},
+        "structure_and_thermodynamic_scope": {"status": "reported", "value": "The high-entropy calculation uses 80-atom perovskite supercells, delta steps of 0.0625 up to 0.5, and cubic, orthorhombic and brownmillerite configurations (19 distinct SQSs per composition in the published protocol). OTC is evaluated between reducing conditions of 1050 C and pO2=10^-14 atm and oxidising conditions of 950 C and pO2=0.2 atm. These 19 structures are not multiplied by retained compositions to infer actual evaluator calls.", "source_locations": ["ACS Materials Au pp. 323-324, Structure Generation and Filtering; Property Estimates"]},
+        "explicit_dynamical_stability_acceptance": {"status": "not_reported", "value": null, "rationale": "A candidate-level imaginary-mode acceptance criterion and corresponding retained count have not been verified. Performing phonon calculations for thermodynamics does not by itself supply that reporting field."},
+        "new_prospective_synthesis": {"status": "not_performed", "value": null, "rationale": "The study chose CHGNet for iterative screening instead of new prospective experiments; its generated-candidate results therefore support a computational screening claim.", "source_locations": ["ACS Materials Au main text, paragraph explaining CHGNet evaluator choice"]},
+        "independent_dft_for_all_new_candidates": {"status": "not_performed", "value": null, "rationale": "The campaign's stated evaluator was CHGNet, not independent new DFT for every acquired candidate. Comparisons with source DFT data or another MLIP remain separate evidence.", "source_locations": ["ACS Materials Au main text, evaluator choice", "METAL Section III, comparisons with source energies"]},
+        "route_and_kinetics": {"status": "not_reported", "value": null, "rationale": "An experimentally validated synthesis route and candidate-specific kinetics were not established by the available computational screening record; thermodynamic operating conditions are supplied separately above."}
+      }
+    },
+    {
+      "id": "R1", "category": "required", "status": "partially_reported",
+      "summary": "The METAL implementation and oxygen-carrier-discovery data repository are identified separately. The latter was inspected at 319f33e1199026e54638a5fd959cea0a3d474f5e, and the recovered initial database and table are hash-bound. Those source snapshots do not establish the historical model-run commit. Later proposal manifests, checkpoints, exact environments, seeds and evaluator events remain unavailable. The reporting artefacts can be rebuilt without discovery simulations.",
+      "source_locations": ["Local METAL checkout, git remote and inspected HEAD on 2026-10-08", "Authenticated oxygen-carrier-discovery GitLab source read, 2026-10-08", "npj/data/oxygen_archive/initial_archive_verification.json"],
+      "artifacts": ["https://gitlab.com/comp-surf-sci/metal/", "https://gitlab.com/comp-surf-sci/oxygen-carrier-discovery/-/tree/319f33e1199026e54638a5fd959cea0a3d474f5e/heoc/wang", "https://arxiv.org/abs/2601.03933"],
+      "details": {
+        "implementation_source": {"status": "reported", "value": "https://gitlab.com/comp-surf-sci/metal/; inspected local implementation commit 1577c12176c1e2a7879631886ba16907adf20ad4. This is not asserted to be the commit used in the published calculations.", "source_locations": ["Local checkout remote and git HEAD inspection, 2026-10-08"]},
+        "initial_source_hashes": {"status": "reported", "value": {"inspected_data_commit": "319f33e1199026e54638a5fd959cea0a3d474f5e", "heoc/wang/training.db.gz_sha256": "5a03ca1107578bdac89b349d307b3086f7e7a499d27107feceb6123aeaa3123a", "complete_unformatted_leaderboard.csv_sha256": "99a6903ee5f2725339707d638c458f461e650ea0b9f852e44ffe8291a1697c79", "scope": "Source snapshot and cycle-zero records; no assertion that this was the model-training commit"}, "source_locations": ["GitLab project HEAD and file downloads; npj/tools/verify_oxygen_archive.py"]},
+        "run_archive_and_environment": {"status": "not_reported", "value": null, "rationale": "Recovered files supply only initial-cycle data. Exact campaign seeds, model settings, checkpoints, dependency locks, later candidate lists and failed/repeated evaluator events still require their original run archive."},
+        "reporting_artefact_rebuild": {"status": "reported", "value": "From genAI-review/npj: python tools/make_figures.py and python tools/build_supplement.py; compile perspective.tex and supplementary_information.tex with LaTeX. These commands rebuild the reporting illustration, not the original discovery simulations.", "source_locations": ["This manuscript revision's npj/tools scripts and sourced figure-input JSON"]}
+      }
+    },
+    {
+      "id": "CL1", "category": "context_dependent", "status": "partially_reported",
+      "summary": "Gaussian-process uncertainty and Thompson acquisition guide an iterative loop, after which evaluated target values update the database. The ACS paper describes five independent 10-cycle runs followed by a merged 40-cycle continuation; the companion account describes ten initial runs. These different source statements are not silently reconciled. The original run mapping is needed before cumulative evaluator use can be recovered.",
+      "source_locations": ["ACS Materials Au Fig. 1c and Method", "METAL Section III.C, Figs. 10-12"],
+      "details": {
+        "acquisition_and_update": {"status": "reported", "value": "Gaussian-process uncertainty with Thompson acquisition; evaluated compositions and targets feed the subsequent model/database update.", "source_locations": ["ACS Materials Au Fig. 1c and Method", "METAL Fig. 1"]},
+        "published_cycle_scope": {"status": "reported", "value": "For the high-entropy campaign, the ACS paper states five independent runs of 10 cycles with identical initial training sets and different random seeds, followed by merging the candidates and 40 additional cycles. Exact seeds are not supplied. This differs from the companion's ten-run description and must be matched to original run records before use as an accounting denominator.", "source_locations": ["ACS Materials Au p. 323, results accompanying Fig. 3"]},
+        "companion_cycle_scope": {"status": "reported", "value": "The companion oxygen-uncoupling account describes cycles 1-50, with the first 10 cycles compiled from 10 individual runs after removing duplicate entries. This statement is attributed to that account, not used to infer evaluator totals.", "source_locations": ["METAL Section III.C and Figs. 10-12"]},
+        "separate_energy_uncertainty": {"status": "reported", "value": "The ACS dry-reforming suitability calculation treats vacancy-formation energies as normally distributed with standard deviation 0.4 eV. This fixed physical-target uncertainty is distinct from the GP predictive uncertainty used for acquisition.", "source_locations": ["ACS Materials Au p. 324, Property Estimates"]},
+        "batch_stopping_and_total_calls": {"status": "not_reported", "value": null, "rationale": "Exact attempted/accepted batches, stopping decisions, duplicates, retries and cumulative evaluator calls require the run logs."}
+      }
+    },
+    {
+      "id": "C1", "category": "context_dependent", "status": "not_reported",
+      "summary": "Training, generation, CHGNet relaxation, phonon calculations and other evaluator work should have separate cost entries. None is assigned a fabricated runtime, hardware count, energy estimate or campaign budget.",
+      "source_locations": ["Available publication and companion methods account; no run-level cost archive verified"],
+      "details": {
+        "hardware_costs_and_energy": {"status": "not_reported", "value": null, "rationale": "No verified run-level training, generation, relaxation or phonon timing/device record is available; evaluator work cannot be computed from the initial cohort size alone."}
+      }
+    },
+    {
+      "id": "GOV1", "category": "context_dependent", "status": "partially_reported",
+      "summary": "The declared application is computational exploration of oxygen carriers for chemical looping. It does not itself establish an autonomous hazardous execution pathway. A documented author assessment of safety, access and candidate-specific concerns is still required; the record does not infer absence of risk from an absence of discussion.",
+      "source_locations": ["ACS Materials Au application scope; author risk assessment not recovered"],
+      "details": {
+        "application_scope": {"status": "reported", "value": "Computational oxygen-carrier screening for chemical looping; no new autonomous synthesis campaign is claimed in this reporting example.", "source_locations": ["ACS Materials Au abstract and main text"]},
+        "author_risk_assessment": {"status": "not_reported", "value": null, "rationale": "A signed or documented author assessment is not available; no automatic not_applicable judgement is made."}
+      }
+    },
+    {
+      "id": "K1", "category": "optional_summary", "status": "partially_reported",
+      "summary": "Verified initial preparation: 1815 configurations, 1066 retained (58.7%), 749 filtered, all cycle zero. Campaign generated proposals, acquired candidates, evaluator calls and costs remain unavailable in the recovered files. Evidence endpoint: CHGNet-based thermodynamic screening; no new experimental product count is inferred.",
+      "source_locations": ["Published initial-cohort counts", "The reporting record above"],
+      "details": {
+        "initial_summary": {"status": "reported", "value": {"initial_count": 1815, "retained_count": 1066, "retained_percent_rounded": 58.7, "scope": "preparation cohort only"}, "source_locations": ["ACS Materials Au main text; METAL Section II.A"]},
+        "campaign_summary": {"status": "not_reported", "value": null, "rationale": "Cumulative unique proposals, evaluator attempts, failures, repeats and campaign-level compute must be recovered from the original records."}
+      }
+    }
+  ],
+  "notes": "Development author-format example, not a released checklist or a complete campaign archive. Every category supplies operational evidence or explicit gaps. The initial database and export are directly verified. Differences between the ACS Results, ACS Methods, companion account and archived initial cohort remain visible; source snapshots are not substituted for historical model-run provenance. Public access and dataset licence require resolution before a public reporting release."
+}

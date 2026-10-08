@@ -8,9 +8,13 @@
 
 **Code or data release:** _(URL, DOI, or repository tag/commit)_
 
-For each item, select `reported`, `partially_reported`, `not_reported`, or `not_applicable`, provide a one- to three-sentence response, and point to the exact location in the manuscript, Supplementary Information, or versioned repository. Use `not_applicable` only when the corresponding workflow component or material concern is absent, and state why. The disclosure state records completeness rather than methodological quality.
+**Declared workflow, cohort and endpoint:** _(identify the candidate population, physical evidence level and comparison)_
 
-## Required reporting items
+**Checklist format:** `1.0.0-draft` on the development branch; use the archived 0.2.0 form for unchanged historical records.
+
+For each category, supply actual procedures and values with exact source locations, or identify unavailable information. Use `not_performed` only for an applicable operation known not to have been undertaken, explaining the consequence for the claim. Use `not_applicable` only when the operation is absent from the workflow, with an applicability reason. Do not infer non-performance from missing reporting. Retain nulls for unavailable quantities. Attach the completed record to the submission, with a short main-text reference; a list of states alone is not an operational author response. The Brorsson development example shows concrete responses and explicit gaps.
+
+## Core response categories
 
 | ID | Item | Disclosure state | Response | Exact source location and public artefact |
 |---|---|---|---|---|
@@ -39,3 +43,5 @@ For each item, select `reported`, `partially_reported`, `not_reported`, or `not_
 | K1 | Key-number summary |  |  |  |
 
 `N_gen=...; stagewise pass rates=...; validated outcomes=...; evaluator budget=...; closed loop=R rounds × N_eval evaluations (where used); training cost=...; inference cost=...; tag=repo@vX.Y`
+
+The compact format is optional; claim-relevant counts are not. Use the stage ledger to separate candidate populations, evaluator calls, failed calls and repeats. Nominal rounds multiplied by a batch size do not establish the budget where runs are pooled or failures, repeats and variable batches occur. Inference throughput belongs under Generation, not Training.

@@ -1,6 +1,6 @@
 % Author response template for the reporting checklist
 % Standalone usage: pdflatex author_response_template.tex
-\documentclass[10pt]{article}
+\documentclass[10pt,a4paper]{article}
 
 \usepackage[margin=20mm]{geometry}
 \usepackage[T1]{fontenc}
@@ -31,12 +31,16 @@
 \textbf{Code or data release:} \emph{(URL, DOI, or repository tag/commit)}
 
 \medskip
-\noindent\textbf{Instructions.} For each item, select \texttt{reported}, \texttt{partially\_reported}, \texttt{not\_reported}, or \texttt{not\_applicable}; provide a one--three sentence response; and identify the exact source location. Use \texttt{not\_applicable} only when the corresponding workflow component or material concern is absent, and state why. The state records reporting completeness rather than methodological quality.
+\noindent\textbf{Declared workflow, cohort and endpoint:} \emph{(candidate population, physical evidence level and comparison)}\\
+\textbf{Development format:} \texttt{1.0.0-draft}. The archived 0.2.0 records retain their original interpretation.
+
+\medskip
+\noindent\textbf{Instructions.} Supply operational values and decisions with exact source locations, rather than a list of states alone. Distinguish \texttt{reported}, mixed \texttt{partially\_reported}, unavailable \texttt{not\_reported}, known \texttt{not\_performed}, and justified \texttt{not\_applicable}. Explain the reason and claim consequence of non-performance and the rationale for inapplicability. Keep unavailable quantities missing rather than zero. Attach the consolidated record to the submission and refer to it briefly in the main text. The identifiers below are retained for machine compatibility, not a requirement to print numerical category codes in the manuscript.
 
 \setlength{\LTpre}{4pt}
 \setlength{\LTpost}{8pt}
 
-\subsection*{Required reporting items}
+\subsection*{Core response categories}
 
 \begin{longtable}{@{}L{0.05\textwidth} N{0.16\textwidth} L{0.14\textwidth} L{0.37\textwidth} L{0.20\textwidth}@{}}
 \ResponseTableHeader
@@ -83,5 +87,7 @@
 \end{longtable}
 
 \noindent\footnotesize\textbf{Suggested K1 fields.} Total candidates; stagewise pass rates; validated outcomes; evaluator budget; closed-loop rounds and evaluations, where used; training and inference cost; and the versioned code or record identifier.
+
+\medskip\noindent The compact summary is optional as a format; claim-relevant counts remain required. Separate candidate counts from evaluator calls, failures and repeats in the stage ledger. Report inference throughput under Generation and training time under Training.
 
 \end{document}

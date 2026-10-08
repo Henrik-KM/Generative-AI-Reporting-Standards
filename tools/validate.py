@@ -57,11 +57,9 @@ def validate_record(record: Any, schema: dict[str, Any]) -> list[str]:
         if field not in top_properties:
             errors.append(f"unknown top-level field '{field}'")
 
-    if record.get("checklist_version") != top_properties["checklist_version"]["const"]:
-        errors.append(
-            "checklist_version must be "
-            f"'{top_properties['checklist_version']['const']}'"
-        )
+    version = record.get("checklist_version")
+    if version not in top_properties["checklist_version"]["enum"]:
+        errors.append(f"checklist_version must be one of {top_properties['checklist_version']['enum']}")
 
     record_types = set(top_properties["record_type"]["enum"])
     record_type = record.get("record_type")
@@ -128,14 +126,20 @@ def validate_record(record: Any, schema: dict[str, Any]) -> list[str]:
                 errors.append(
                     f"{location}.category must be '{expected_category}' for {item_id}"
                 )
-            if item.get("status") == "not_applicable" and expected_category == "required":
+            if item.get("status") == "not_applicable" and expected_category == "required" and version == "0.2.0":
                 errors.append(f"{location}.status cannot be not_applicable for required item {item_id}")
+            if item.get("status") == "not_applicable" and version == "1.0.0-draft" and not nonempty_string(item.get("applicability_reason")):
+                errors.append(f"{location}.applicability_reason is required for not_applicable")
 
         status = item.get("status")
         if not isinstance(status, str):
             errors.append(f"{location}.status must be a string")
         elif status not in allowed_statuses:
             errors.append(f"{location}.status must be one of {sorted(allowed_statuses)}")
+        elif status == "not_performed" and version == "0.2.0":
+            errors.append(f"{location}.status not_performed is not defined in version 0.2.0")
+        if status == "not_performed" and not nonempty_string(item.get("notes")):
+            errors.append(f"{location}.notes must state the reason and claim consequence of non-performance")
         if not nonempty_string(item.get("summary")):
             errors.append(f"{location}.summary must be a non-empty string")
         validate_string_list(
@@ -150,6 +154,39 @@ def validate_record(record: Any, schema: dict[str, Any]) -> list[str]:
             )
         if "notes" in item and not isinstance(item["notes"], str):
             errors.append(f"{location}.notes must be a string")
+        if "applicability_reason" in item and not nonempty_string(item["applicability_reason"]):
+            errors.append(f"{location}.applicability_reason must be a non-empty string")
+        if version == "1.0.0-draft" and record_type == "author_response" and "details" not in item:
+            errors.append(f"{location}.details is required for an operational author response")
+        if "details" in item:
+            if version == "0.2.0":
+                errors.append(f"{location}.details requires the development version, not 0.2.0")
+            details = item["details"]
+            if not isinstance(details, dict) or not details:
+                errors.append(f"{location}.details must be a non-empty object")
+            else:
+                for name, detail in details.items():
+                    detail_location = f"{location}.details.{name}"
+                    if not nonempty_string(name) or not isinstance(detail, dict):
+                        errors.append(f"{detail_location} must be a named response object")
+                        continue
+                    for field in detail:
+                        if field not in schema["$defs"]["detail"]["properties"]:
+                            errors.append(f"unknown field '{detail_location}.{field}'")
+                    detail_status = detail.get("status")
+                    if detail_status not in schema["$defs"]["detail"]["properties"]["status"]["enum"]:
+                        errors.append(f"{detail_location}.status is invalid")
+                    if "value" not in detail:
+                        errors.append(f"{detail_location}.value is required, including null for unavailable details")
+                    if detail_status == "reported":
+                        if detail.get("value") is None or detail.get("value") == "":
+                            errors.append(f"{detail_location}.value must supply the reported information")
+                        validate_string_list(detail.get("source_locations"), f"{detail_location}.source_locations", errors, nonempty=True)
+                    else:
+                        if detail.get("value") is not None:
+                            errors.append(f"{detail_location}.value must be null for an unavailable or inapplicable detail")
+                        if not nonempty_string(detail.get("rationale")):
+                            errors.append(f"{detail_location}.rationale must explain non-performance, inapplicability or the evidence gap")
 
     missing = [item_id for item_id in schema["x-checklist-order"] if item_id in required_record_ids and item_id not in seen]
     if missing:

@@ -14,7 +14,7 @@
   "properties": {
     "checklist_version": {
       "type": "string",
-      "const": "0.2.0"
+      "enum": ["0.2.0", "1.0.0-draft"]
     },
     "record_type": {
       "type": "string",
@@ -39,6 +39,36 @@
       "type": "string"
     }
   },
+  "allOf": [
+    {
+      "if": {"properties": {"checklist_version": {"const": "0.2.0"}}},
+      "then": {"properties": {"items": {"items": {
+        "properties": {"status": {"enum": ["reported", "partially_reported", "not_reported", "not_applicable"]}},
+        "not": {"required": ["details"]},
+        "allOf": [{
+          "if": {"properties": {"id": {"enum": ["D1", "S1", "M1", "T1", "G1", "E1", "B1", "F1", "R1"]}}},
+          "then": {"properties": {"status": {"not": {"const": "not_applicable"}}}}
+        }]
+      }}}}
+    },
+    {
+      "if": {"properties": {"checklist_version": {"const": "1.0.0-draft"}}},
+      "then": {"properties": {"items": {"items": {"allOf": [
+        {
+          "if": {"properties": {"status": {"const": "not_applicable"}}},
+          "then": {"required": ["applicability_reason"]}
+        },
+        {
+          "if": {"properties": {"status": {"const": "not_performed"}}},
+          "then": {"required": ["notes"], "properties": {"notes": {"minLength": 1}}}
+        }
+      ]}}}}
+    },
+    {
+      "if": {"properties": {"checklist_version": {"const": "1.0.0-draft"}, "record_type": {"const": "author_response"}}},
+      "then": {"properties": {"items": {"items": {"required": ["details"]}}}}
+    }
+  ],
   "$defs": {
     "study": {
       "type": "object",
@@ -119,7 +149,8 @@
             "reported",
             "partially_reported",
             "not_reported",
-            "not_applicable"
+            "not_applicable",
+            "not_performed"
           ]
         },
         "summary": {
@@ -143,7 +174,35 @@
         },
         "notes": {
           "type": "string"
+        },
+        "applicability_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "details": {
+          "type": "object",
+          "minProperties": 1,
+          "description": "Operational author responses. Missing evidence is distinct from a test known not to have been performed.",
+          "additionalProperties": {"$ref": "#/$defs/detail"}
         }
+      }
+    },
+    "detail": {
+      "type": "object",
+      "required": ["status", "value"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "reported"}}},
+          "then": {"required": ["source_locations"], "properties": {"value": {"not": {"enum": [null, ""]}}}},
+          "else": {"required": ["rationale"], "properties": {"value": {"type": "null"}}}
+        }
+      ],
+      "properties": {
+        "status": {"enum": ["reported", "not_reported", "not_performed", "not_applicable"]},
+        "value": {},
+        "rationale": {"type": "string", "minLength": 1},
+        "source_locations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
       }
     }
   },
