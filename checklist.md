@@ -1,16 +1,10 @@
 # A reporting protocol for generative materials design (version 1.0.0)
 
-Generative models can now propose candidate materials far faster than they can be validated, and the scientifically relevant outcome of a study is therefore the small subset of candidates that survives filtering and evaluation, rather than the generated set itself. This protocol treats the complete workflow, from data and candidate generation through filters and evaluators to validated outcomes, as the unit that should be reported. It does not prescribe a preferred pipeline, and a complete record does not by itself establish that the chosen methods, thresholds, or conclusions are appropriate.
+Generative models can now propose candidate materials far faster than they can be validated, and the scientifically relevant outcome of a study is therefore the small subset of candidates that survives filtering and evaluation, rather than the generated set itself. To this end, the protocol below treats the complete workflow, from data and candidate generation through filters and evaluators to validated outcomes, as the unit of reporting. Its eight steps follow the order in which a record is best completed, since the claim stated in the first step bounds every later entry. The protocol does not prescribe a preferred pipeline, and a complete record does not by itself establish that the chosen methods, thresholds, or conclusions are appropriate.
 
 ## How to use the protocol
 
-Authors complete one entry per item at submission, in the Supplementary Information or in a versioned repository. Each entry states the choice or value that was actually used, in one or two sentences, followed by the location of the full details; a pointer alone is not an entry. Every item is answered in one of three ways:
-
-- with the **value** or procedure that was used;
-- as **not applicable**, with the reason the component is absent from the workflow;
-- as **not performed**, with the consequence for the claim.
-
-When a record is completed from a publication rather than by its authors, a fourth answer, **not stated**, marks information that only the authors could supply. Items marked *(if applicable)* are answered as not applicable when the component is absent.
+Authors complete one entry per item at submission, in the Supplementary Information or in a versioned repository. Each entry states the choice or value that was actually used, in one or two sentences, followed by the location of the full details; a pointer alone is not an entry. Every item is answered in one of three ways: with the value or procedure; as *not applicable*, with the reason the component is absent from the workflow; or as *not performed*, with the consequence for the claim. Items marked *(if applicable)* are answered as not applicable when the component is absent. When a record is completed from a publication rather than by its authors, a fourth answer, *not stated*, marks information that only the authors could supply.
 
 The protocol applies to any workflow in which a proposal engine, whether a generative model, an enumeration scheme, or a structure search, feeds a sequence of filters and evaluators. Model and training items refer to every model trained within the workflow, including surrogates and machine-learning interatomic potentials.
 

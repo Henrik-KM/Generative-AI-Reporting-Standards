@@ -8,7 +8,7 @@
 
 **Code and data:** _(URL, DOI, or repository tag/commit, or the access restriction)_
 
-Complete one entry per item. Each entry states the choice or value that was actually used, in one or two sentences, followed by the location of the full details; a pointer alone is not an entry. Answer each item as `value`, as `not_applicable` with the reason the component is absent from the workflow, or as `not_performed` with the consequence for the claim. Items marked *(if applicable)* are answered as not applicable when the component is absent. The protocol text is given in [checklist.md](../checklist.md).
+Complete one entry per item, starting with the claim, since it bounds every later entry. Each entry states the choice or value that was actually used, in one or two sentences, followed by the location of the full details; a pointer alone is not an entry, since it leaves the reader to reconstruct precisely the information that the record is meant to collect. Answer each item as `value`, as `not_applicable` with the reason the component is absent from the workflow, or as `not_performed` with the consequence for the claim. Items marked *(if applicable)* are answered as not applicable when the component is absent. The protocol text is given in [checklist.md](../checklist.md).
 
 | Step | Item | Answer | Entry | Location of details |
 |---|---|---|---|---|
